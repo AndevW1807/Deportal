@@ -1,0 +1,212 @@
+:host {
+  display: flex;
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: 1.4rem 1.4rem 1.15rem;
+  background: #fff;
+  color: #132018;
+  font-family: system-ui, sans-serif;
+}
+
+form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  letter-spacing: -0.02em;
+}
+
+header p {
+  margin: 0.25rem 0 0;
+  color: #5d6b64;
+}
+
+.close,
+.ghost,
+button[type='submit'] {
+  min-height: 2.75rem;
+  border-radius: 0.8rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.close {
+  display: grid;
+  flex: 0 0 auto;
+  width: 2.75rem;
+  place-items: center;
+  border: 0;
+  background: #f3f6f4;
+  color: #173028;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.85rem;
+  padding: 0 0.8rem;
+  border: 1px solid #c9d7d0;
+  border-radius: 0.85rem;
+  background: #fff;
+}
+
+.control:focus-within {
+  border-color: #0f6b3c;
+  outline: 2px solid #0f6b3c;
+  outline-offset: 1px;
+}
+
+input[type='number'] {
+  appearance: textfield;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 2.85rem;
+  box-sizing: border-box;
+  padding: 0 0.85rem;
+  border: 1px solid #c9d7d0;
+  border-radius: 0.85rem;
+  background: #fff;
+  color: #132018;
+  font: inherit;
+  font-weight: 500;
+}
+
+.control input,
+.control select {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+input:focus,
+select:focus {
+  border-color: #0f6b3c;
+  outline: 2px solid #0f6b3c;
+  outline-offset: 1px;
+}
+
+.control input:focus,
+.control select:focus {
+  outline: none;
+}
+
+.prefix,
+.rate-view {
+  color: #132018;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.rate {
+  position: relative;
+}
+
+.rate input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: text;
+}
+
+mat-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #0f6b3c;
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-size: 1.25rem;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.error {
+  color: #9f1239;
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e4ece7;
+}
+
+.ghost,
+button[type='submit'] {
+  padding: 0 1.15rem;
+}
+
+.ghost {
+  border: 1px solid #c9d7d0;
+  background: #fff;
+  color: #173028;
+}
+
+button[type='submit'] {
+  border: 0;
+  background: #0f6b3c;
+  color: #fff;
+}
+
+button[type='submit']:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+@media (max-width: 700px) {
+  :host {
+    min-height: 100dvh;
+  }
+
+  .pair {
+    grid-template-columns: 1fr;
+  }
+}

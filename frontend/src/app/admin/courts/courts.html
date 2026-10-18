@@ -2,35 +2,44 @@
   <header class="head">
     <div>
       <h1>Canchas</h1>
-      <p>{{ countLabel() }}</p>
+      <p class="help">Administra las canchas registradas.</p>
     </div>
-    <label class="search">
-      <mat-icon aria-hidden="true">search</mat-icon>
-      <input
-        type="search"
-        [value]="query()"
-        (input)="onQuery($event)"
-        placeholder="Buscar por nombre"
-        aria-label="Buscar por nombre"
-      />
-    </label>
+    <button mat-flat-button type="button" class="add" (click)="create()">
+      <mat-icon aria-hidden="true">add</mat-icon>
+      Agregar cancha
+    </button>
   </header>
 
-  <div class="filters" role="group" aria-label="Filtrar por deporte">
-    <button type="button" [attr.aria-pressed]="sport() === null" (click)="sport.set(null)">
-      Todos
-    </button>
-    @for (item of sportFilters(); track item.code) {
-      <button
-        type="button"
-        [attr.aria-pressed]="sport() === item.code"
-        (click)="sport.set(item.code)"
-      >
-        <mat-icon aria-hidden="true">{{ look(item).icon }}</mat-icon>
-        {{ item.name }}
-      </button>
+  <div class="toolbar">
+    <div class="filters">
+      <label class="search">
+        <mat-icon aria-hidden="true">search</mat-icon>
+        <input
+          type="search"
+          [value]="query()"
+          (input)="onQuery($event)"
+          placeholder="Buscar por nombre"
+          aria-label="Buscar por nombre"
+        />
+      </label>
+
+      <label class="sport-filter">
+        Deporte
+        <select [value]="sport() ?? ''" (change)="onSport($event)" aria-label="Deporte">
+          <option value="">Todos</option>
+          @for (item of sportFilters(); track item.code) {
+            <option [value]="item.code">{{ item.name }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    @if (filtered()) {
+      <button type="button" class="clear" (click)="clearFilters()">Limpiar filtros</button>
     }
   </div>
+
+  <p class="count">{{ countLabel() }}</p>
 
   @if (loading()) {
     <div class="grid" aria-hidden="true">

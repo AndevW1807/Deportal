@@ -2,6 +2,7 @@ package com.deportal.infrastructure.config;
 
 import java.time.Clock;
 
+import com.deportal.application.court.CreateCourt;
 import com.deportal.application.court.DeleteCourt;
 import com.deportal.application.court.ListCourts;
 import com.deportal.application.court.ListSportTypes;
@@ -24,6 +25,11 @@ public class CourtConfiguration {
 	@Bean
 	ListSportTypes listSportTypes(SportTypeCatalog sports) {
 		return new ListSportTypes(sports);
+	}
+
+	@Bean
+	CreateCourt createCourt(CourtRepository courts, SportTypeCatalog sports) {
+		return new CreateCourt(courts, sports);
 	}
 
 	@Bean

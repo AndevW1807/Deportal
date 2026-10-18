@@ -1,0 +1,42 @@
+<article class="card" [class.leaving]="leaving()">
+  <header class="band" [style.background]="look().tint" [style.color]="look().ink">
+    <mat-icon aria-hidden="true">{{ look().icon }}</mat-icon>
+    <span>{{ court().sportType.name }}</span>
+  </header>
+
+  <div class="body">
+    <h2>{{ court().name }}</h2>
+
+    <ul class="facts">
+      <li>
+        <mat-icon aria-hidden="true">schedule</mat-icon>
+        {{ court().opensAt }} – {{ court().closesAt }}
+      </li>
+      <li>
+        <mat-icon aria-hidden="true">group</mat-icon>
+        {{ people() }}
+      </li>
+      <li>
+        <mat-icon aria-hidden="true">payments</mat-icon>
+        {{ rate() }}
+      </li>
+    </ul>
+
+    <div class="actions">
+      <button mat-stroked-button type="button" (click)="edit.emit(court())" [attr.aria-label]="'Editar ' + court().name">
+        <mat-icon aria-hidden="true">edit</mat-icon>
+        Editar
+      </button>
+      <button
+        mat-stroked-button
+        type="button"
+        class="danger"
+        (click)="remove.emit(court())"
+        [attr.aria-label]="'Eliminar ' + court().name"
+      >
+        <mat-icon aria-hidden="true">delete</mat-icon>
+        Eliminar
+      </button>
+    </div>
+  </div>
+</article>

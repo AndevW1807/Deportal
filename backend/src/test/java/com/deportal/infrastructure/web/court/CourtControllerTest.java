@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import com.deportal.application.auth.AuthenticatedUser;
+import com.deportal.application.court.CreateCourt;
 import com.deportal.application.court.CourtDetails;
 import com.deportal.application.court.DeleteCourt;
 import com.deportal.application.court.ListCourts;
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,6 +67,9 @@ class CourtControllerTest {
 
 	@MockitoBean
 	private ListSportTypes listSportTypes;
+
+	@MockitoBean
+	private CreateCourt createCourt;
 
 	@MockitoBean
 	private UpdateCourt updateCourt;
@@ -96,6 +101,51 @@ class CourtControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[0].code").value("FOOTBALL"))
 			.andExpect(jsonPath("$[0].name").value("Fútbol"));
+	}
+
+	@Test
+	void createsACourt() throws Exception {
+		when(createCourt.execute(eq("Cancha Norte"), eq("FOOTBALL"), eq(10), eq(LocalTime.of(6, 0)),
+				eq(LocalTime.of(22, 0)), eq(new BigDecimal("20.00"))))
+			.thenReturn(details());
+
+		mockMvc.perform(post("/api/admin/courts").header("Authorization", bearer(UserRole.ADMIN))
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(COURT))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.name").value("Cancha Norte"));
+	}
+
+	@Test
+	void rejectsAnInvalidNewCourt() throws Exception {
+		when(createCourt.execute(any(), any(), any(Integer.class), any(), any(), any())).thenThrow(new InvalidCourt());
+
+		mockMvc.perform(post("/api/admin/courts").header("Authorization", bearer(UserRole.ADMIN))
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(COURT))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.detail").value("Invalid request"));
+	}
+
+	@Test
+	void rejectsACustomerWhoCreatesACourt() throws Exception {
+		mockMvc.perform(post("/api/admin/courts").header("Authorization", bearer(UserRole.CUSTOMER))
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(COURT))
+			.andExpect(status().isForbidden())
+			.andExpect(jsonPath("$.detail").value("Admin access required"));
+	}
+
+	@Test
+	void reportsADuplicatedNameOnCreate() throws Exception {
+		when(createCourt.execute(any(), any(), any(Integer.class), any(), any(), any()))
+			.thenThrow(new CourtNameAlreadyUsed());
+
+		mockMvc.perform(post("/api/admin/courts").header("Authorization", bearer(UserRole.ADMIN))
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(COURT))
+			.andExpect(status().isConflict())
+			.andExpect(jsonPath("$.detail").value("Court name already registered"));
 	}
 
 	@Test

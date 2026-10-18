@@ -11,6 +11,8 @@ public interface CourtJpaRepository extends Repository<CourtJpaEntity, Long> {
 
 	Optional<CourtJpaEntity> findByIdAndDeletedAtIsNull(Long id);
 
+	boolean existsByNameAndDeletedAtIsNull(String name);
+
 	boolean existsByNameAndDeletedAtIsNullAndIdNot(String name, Long id);
 
 	CourtJpaEntity save(CourtJpaEntity court);

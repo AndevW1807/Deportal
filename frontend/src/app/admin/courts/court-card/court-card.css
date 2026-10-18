@@ -1,15 +1,14 @@
 :host {
   display: block;
+  min-width: 0;
   animation: rise 200ms ease-out both;
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
   height: 100%;
-  box-sizing: border-box;
-  padding: 1.1rem 1.1rem 1rem;
+  overflow: hidden;
   border: 1px solid #e4ece7;
   border-radius: 1.15rem;
   background: #fff;
@@ -28,23 +27,62 @@
   animation: leave 180ms ease-in forwards;
 }
 
-.top {
+.band {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.55rem;
+  min-height: 4.5rem;
+  padding: 0.9rem 1rem;
+  font-weight: 750;
 }
 
-.badge {
+.band mat-icon {
+  width: 1.7rem;
+  height: 1.7rem;
+  font-size: 1.7rem;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1rem 1rem 0.95rem;
+}
+
+h2 {
+  margin: 0;
+  color: #132018;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.facts {
   display: grid;
-  width: 2.6rem;
-  height: 2.6rem;
-  place-items: center;
-  border-radius: 0.85rem;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.badge mat-icon,
-.people mat-icon,
-.actions mat-icon {
+.facts li,
+.actions button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.facts li {
+  color: #3d4c45;
+  font-variant-numeric: tabular-nums;
+}
+
+.facts li:last-child {
+  color: #132018;
+  font-weight: 750;
+}
+
+mat-icon {
   font-family: 'Material Symbols Outlined', sans-serif;
   font-variation-settings:
     'FILL' 0,
@@ -53,69 +91,11 @@
     'opsz' 24;
 }
 
-.sport,
-.people,
-.scale {
-  margin: 0;
-  color: #5d6b64;
-  font-size: 0.92rem;
-}
-
-h2 {
-  margin: 0;
-  color: #132018;
-  font-size: 1.25rem;
-  line-height: 1.25;
-}
-
-.track {
-  position: relative;
-  height: 0.45rem;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #eef3f0;
-}
-
-.open {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  border-radius: inherit;
-  background: #0f6b3c;
-}
-
-.scale {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 0.4rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.scale span:nth-child(2) {
+.facts mat-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  font-size: 1.15rem;
   color: #0f6b3c;
-  font-weight: 650;
-}
-
-.facts {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.people {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.rate {
-  margin: 0;
-  color: #132018;
-  font-size: 1.2rem;
-  font-weight: 750;
-  font-variant-numeric: tabular-nums;
 }
 
 .actions {
@@ -125,13 +105,12 @@ h2 {
 }
 
 .actions button {
-  display: inline-flex;
+  --mat-button-outlined-label-text-color: #173028;
+  --mat-button-outlined-outline-color: #d7e3dc;
   flex: 1;
-  align-items: center;
   justify-content: center;
-  gap: 0.3rem;
   min-height: 2.75rem;
-  border: 1px solid #d7e3dc;
+  border-color: #d7e3dc;
   border-radius: 0.8rem;
   background: #fff;
   color: #173028;
@@ -140,17 +119,22 @@ h2 {
   cursor: pointer;
 }
 
-.actions button:hover {
+.actions button:hover:not(.danger) {
   background: #f4faf6;
 }
 
 .actions .danger {
+  --mat-button-outlined-label-text-color: #9f1239;
+  --mat-button-outlined-outline-color: #f3d0d0;
+  --mat-button-outlined-state-layer-color: #9f1239;
+  --mat-button-outlined-ripple-color: #9f1239;
   border-color: #f3d0d0;
   color: #9f1239;
 }
 
 .actions .danger:hover {
   background: #fff5f5;
+  color: #9f1239;
 }
 
 @keyframes rise {

@@ -1,0 +1,92 @@
+<form (submit)="onSubmit($event)" novalidate>
+  <header>
+    <div>
+      <h2 id="court-editor-title">{{ title }}</h2>
+      <p>{{ hint }}</p>
+    </div>
+    <button type="button" class="close" (click)="cancel()" aria-label="Cerrar">
+      <span aria-hidden="true">×</span>
+    </button>
+  </header>
+
+  <label class="field">
+    Nombre
+    <input type="text" [formField]="editorForm.name" aria-label="Nombre" />
+    @if (nameTaken()) {
+      <span class="error">Ya existe una cancha con ese nombre</span>
+    } @else if (message(editorForm.name()); as text) {
+      <span class="error">{{ text }}</span>
+    }
+  </label>
+
+  <label class="field">
+    Deporte
+    <span class="control">
+      <mat-icon aria-hidden="true">{{ sportIcon() }}</mat-icon>
+      <select [formField]="editorForm.sportTypeCode" aria-label="Deporte">
+        @for (sport of data.sportTypes; track sport.code) {
+          <option [value]="sport.code">{{ sport.name }}</option>
+        }
+      </select>
+    </span>
+    @if (message(editorForm.sportTypeCode()); as text) {
+      <span class="error">{{ text }}</span>
+    }
+  </label>
+
+  <div class="pair">
+    <label class="field">
+      Capacidad
+      <input
+        type="text"
+        inputmode="numeric"
+        autocomplete="off"
+        [formField]="editorForm.capacity"
+        (beforeinput)="restrictCapacity($event)"
+        aria-label="Capacidad"
+      />
+      @if (message(editorForm.capacity()); as text) {
+        <span class="error">{{ text }}</span>
+      }
+    </label>
+
+    <label class="field">
+      Tarifa por hora
+      <span class="control rate">
+        <span class="rate-view">{{ formattedRate() }}</span>
+        <input
+          type="number"
+          inputmode="decimal"
+          autocomplete="off"
+          [formField]="editorForm.hourlyRate"
+          (beforeinput)="restrictRate($event)"
+          aria-label="Tarifa por hora"
+        />
+      </span>
+      @if (message(editorForm.hourlyRate()); as text) {
+        <span class="error">{{ text }}</span>
+      }
+    </label>
+  </div>
+
+  <div class="pair">
+    <label class="field">
+      Apertura
+      <input type="time" [formField]="editorForm.opensAt" aria-label="Apertura" />
+    </label>
+    <label class="field">
+      Cierre
+      <input type="time" [formField]="editorForm.closesAt" aria-label="Cierre" />
+    </label>
+  </div>
+  @if (hoursMessage(); as text) {
+    <span class="error">{{ text }}</span>
+  }
+
+  <div class="actions">
+    <button type="button" class="ghost" (click)="cancel()">Cancelar</button>
+    <button type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Guardando…' : 'Guardar' }}
+    </button>
+  </div>
+</form>

@@ -91,29 +91,50 @@ mat-icon {
 mat-toolbar {
   background: #0c1210;
   color: #f4f7f5;
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: normal;
 }
 
-.page-title {
+.page-title,
+.profile {
   margin: 0;
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: normal;
 }
 
 .profile {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  margin: 0 0 0 auto;
-  font-weight: 600;
+  gap: 0.6rem;
+  margin-left: auto;
 }
 
-.profile mat-icon {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
-  background: #173028;
-  color: #b7f7cf;
-  font-size: 1.35rem;
+.avatar {
+  display: grid;
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #3ddc84;
+  color: #06210f;
+}
+
+.avatar mat-icon {
+  width: 1.45rem;
+  height: 1.45rem;
+  background: transparent;
+  color: inherit;
+  font-size: 1.45rem;
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
 .content {

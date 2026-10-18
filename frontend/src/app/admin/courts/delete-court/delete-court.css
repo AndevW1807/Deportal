@@ -1,0 +1,79 @@
+:host {
+  display: block;
+  box-sizing: border-box;
+  padding: 1.6rem 1.35rem 1.15rem;
+  background: #fff;
+  color: #132018;
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.badge {
+  display: grid;
+  width: 4.25rem;
+  height: 4.25rem;
+  place-items: center;
+  border-radius: 50%;
+  background: #fde8e8;
+  color: #e11d2e;
+}
+
+.badge mat-icon {
+  width: 2rem;
+  height: 2rem;
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-size: 2rem;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+h2 {
+  margin: 1.15rem 0 0.55rem;
+  font-size: 1.45rem;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0 0 1.35rem;
+  max-width: 22rem;
+  color: #5d6b64;
+  line-height: 1.45;
+}
+
+button {
+  width: 100%;
+  min-height: 2.85rem;
+  border: 0;
+  border-radius: 0.85rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.danger {
+  background: #ff3b30;
+  color: #fff;
+}
+
+.danger:hover {
+  background: #e9342a;
+}
+
+.cancel {
+  margin-top: 0.35rem;
+  background: transparent;
+  color: #3d4c45;
+}
+
+.cancel:hover {
+  color: #132018;
+}

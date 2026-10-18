@@ -17,6 +17,10 @@ export class CourtService {
       .pipe(map((body) => parseSportTypes(body)));
   }
 
+  create(draft: CourtDraft): Observable<Court> {
+    return this.http.post<unknown>('/api/admin/courts', draft).pipe(map((body) => parseCourt(body)));
+  }
+
   update(id: number, draft: CourtDraft): Observable<Court> {
     return this.http
       .put<unknown>(`/api/admin/courts/${id}`, draft)

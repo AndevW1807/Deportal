@@ -8,7 +8,9 @@
     <div class="sidenav-head">
       @if (isNarrow()) {
         <p class="profile">
-          <mat-icon>account_circle</mat-icon>
+          <span class="avatar" aria-hidden="true">
+            <mat-icon>person</mat-icon>
+          </span>
           @if (profileName(); as name) {
             <span>{{ name }}</span>
           }
@@ -62,7 +64,9 @@
       } @else {
         <p class="page-title">Canchas</p>
         <p class="profile">
-          <mat-icon>account_circle</mat-icon>
+          <span class="avatar" aria-hidden="true">
+            <mat-icon>person</mat-icon>
+          </span>
           @if (profileName(); as name) {
             <span>{{ name }}</span>
           }

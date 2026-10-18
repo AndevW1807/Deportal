@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { authInterceptor } from '../../auth/session/auth-interceptor';
 import { Notice } from '../../auth/notice/notice';
-import { Court } from './court.model';
+import { Court, formatRate } from './court.model';
 import { Courts } from './courts';
 
 describe('Courts', () => {
@@ -36,7 +36,7 @@ describe('Courts', () => {
     expect(text).toContain('2 canchas registradas');
     expect(text).toContain('Norte');
     expect(text).toContain('Sur');
-    expect(text).toContain('$20.00 / hora');
+    expect(text).toContain(formatRate('20.00'));
     expect(fixture.nativeElement.querySelector('button[aria-label="Editar Norte"]')).not.toBeNull();
     expect(fixture.nativeElement.querySelector('button[aria-label="Eliminar Norte"]')).not.toBeNull();
   });
@@ -45,12 +45,12 @@ describe('Courts', () => {
     flushCourts([court('Norte', 'FOOTBALL', 'Fútbol'), court('Sur', 'TENNIS', 'Tenis', 5)]);
     await fixture.whenStable();
 
-    clickChip('Tenis');
+    chooseSport('TENNIS');
     await fixture.whenStable();
     expect(fixture.nativeElement.textContent).toContain('Sur');
     expect(fixture.nativeElement.textContent).not.toContain('Norte');
 
-    clickChip('Todos');
+    chooseSport('');
     fill(fixture.nativeElement.querySelector('input[aria-label="Buscar por nombre"]'), 'nor');
     await fixture.whenStable();
     expect(fixture.nativeElement.textContent).toContain('Norte');
@@ -97,6 +97,63 @@ describe('Courts', () => {
     expect(TestBed.inject(Notice).kind()).toBe('success');
   });
 
+  it('adds a court from the dialog', async () => {
+    flushCourts([court('Cancha Norte', 'FOOTBALL', 'Fútbol')]);
+    await fixture.whenStable();
+
+    fixture.nativeElement.querySelector('button.add').click();
+    await fixture.whenStable();
+    const dialog = document.querySelector('app-court-editor') as HTMLElement;
+    fill(dialog.querySelector('input[aria-label="Nombre"]') as HTMLInputElement, 'Cancha Sur');
+    dialog.querySelector('form')?.dispatchEvent(new Event('submit'));
+    await nextTurn();
+
+    const request = http.expectOne({ method: 'POST', url: '/api/admin/courts' });
+    expect(request.request.body).toMatchObject({ name: 'Cancha Sur', sportTypeCode: 'FOOTBALL' });
+    request.flush({
+      id: 9,
+      name: 'Cancha Sur',
+      sportType: { code: 'FOOTBALL', name: 'Fútbol' },
+      capacity: 10,
+      opensAt: '06:00',
+      closesAt: '22:00',
+      hourlyRate: '5.00',
+    });
+    await nextTurn();
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    await fixture.whenStable();
+
+    expect(TestBed.inject(Notice).text()).toBe('Cancha creada');
+    expect(document.querySelector('app-court-editor')).toBeNull();
+    expect(fixture.nativeElement.textContent).toContain('Cancha Sur');
+  });
+
+  it('keeps letters and extra digits out of capacity and rate', async () => {
+    flushCourts([court('Norte', 'FOOTBALL', 'Fútbol')]);
+    await fixture.whenStable();
+
+    fixture.nativeElement.querySelector('button.add').click();
+    await fixture.whenStable();
+    const dialog = document.querySelector('app-court-editor') as HTMLElement;
+    const capacity = dialog.querySelector('input[aria-label="Capacidad"]') as HTMLInputElement;
+    const rate = dialog.querySelector('input[aria-label="Tarifa por hora"]') as HTMLInputElement;
+
+    expect(blocked(capacity, 'a')).toBe(true);
+    capacity.value = '1';
+    capacity.setSelectionRange(1, 1);
+    expect(blocked(capacity, '5')).toBe(false);
+    capacity.value = '50';
+    capacity.setSelectionRange(2, 2);
+    expect(blocked(capacity, '0')).toBe(true);
+    capacity.value = '5';
+    capacity.setSelectionRange(1, 1);
+    expect(blocked(capacity, '6')).toBe(true);
+    expect(blocked(rate, 'e')).toBe(true);
+    expect(blocked(rate, 'x')).toBe(true);
+    expect(blocked(rate, '000000000')).toBe(true);
+    expect(blocked(rate, '.999')).toBe(true);
+  });
+
   it('keeps the editor open when the name is already used', async () => {
     flushCourts([court('Norte', 'FOOTBALL', 'Fútbol')]);
     await fixture.whenStable();
@@ -124,6 +181,8 @@ describe('Courts', () => {
 
     fixture.nativeElement.querySelector('button[aria-label="Eliminar Norte"]').click();
     await fixture.whenStable();
+    expect(document.body.textContent).toContain('¿Eliminar cancha?');
+    expect(document.body.textContent).toContain('Se eliminará la cancha “Norte”');
     (document.querySelector('app-delete-court button.danger') as HTMLButtonElement).click();
     await fixture.whenStable();
     await nextTurn();
@@ -157,11 +216,12 @@ describe('Courts', () => {
     ]);
   }
 
-  function clickChip(name: string): void {
-    const chip = [...fixture.nativeElement.querySelectorAll('.filters button')].find(
-      (button: Element) => button.textContent?.includes(name),
-    ) as HTMLButtonElement;
-    chip.click();
+  function chooseSport(code: string): void {
+    const select = fixture.nativeElement.querySelector(
+      'select[aria-label="Deporte"]',
+    ) as HTMLSelectElement;
+    select.value = code;
+    select.dispatchEvent(new Event('change'));
   }
 });
 
@@ -180,6 +240,17 @@ function court(name: string, code: string, sport: string, id = 4): Court {
 function fill(input: HTMLInputElement, value: string): void {
   input.value = value;
   input.dispatchEvent(new Event('input'));
+}
+
+function blocked(input: HTMLInputElement, data: string): boolean {
+  const event = new InputEvent('beforeinput', {
+    data,
+    inputType: 'insertText',
+    cancelable: true,
+    bubbles: true,
+  });
+  input.dispatchEvent(event);
+  return event.defaultPrevented;
 }
 
 function nextTurn(): Promise<void> {

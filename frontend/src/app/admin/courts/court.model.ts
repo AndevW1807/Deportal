@@ -68,10 +68,21 @@ export function openSpan(opensAt: string, closesAt: string): { left: string; wid
   };
 }
 
+const cop = new Intl.NumberFormat('es-CO', {
+  style: 'currency',
+  currency: 'COP',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export function formatCop(amount: number): string {
+  return cop.format(amount);
+}
+
 export function formatRate(hourlyRate: string): string {
   const amount = Number(hourlyRate);
-  const text = Number.isFinite(amount) ? amount.toFixed(2) : hourlyRate;
-  return `$${text} / hora`;
+  const text = Number.isFinite(amount) ? formatCop(amount) : hourlyRate;
+  return `${text} / hora`;
 }
 
 export function capacityLabel(capacity: number): string {

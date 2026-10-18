@@ -35,6 +35,9 @@ public class CourtRepositoryAdapter implements CourtRepository {
 
 	@Override
 	public boolean existsActiveName(String name, Long excludingId) {
+		if (excludingId == null) {
+			return courts.existsByNameAndDeletedAtIsNull(name);
+		}
 		return courts.existsByNameAndDeletedAtIsNullAndIdNot(name, excludingId);
 	}
 

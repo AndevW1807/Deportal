@@ -1,0 +1,12 @@
+<section>
+  <span class="badge" aria-hidden="true">
+    <mat-icon>delete</mat-icon>
+  </span>
+  <h2 id="delete-court-title">¿Eliminar cancha?</h2>
+  <p>
+    Esta acción no se puede deshacer. Se eliminará la cancha “{{ court.name }}” y toda su información
+    relacionada.
+  </p>
+  <button type="button" class="danger" (click)="confirm()">Eliminar</button>
+  <button type="button" class="cancel" (click)="cancel()">Cancelar</button>
+</section>

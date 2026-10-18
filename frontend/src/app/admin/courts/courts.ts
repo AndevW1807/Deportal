@@ -1,18 +1,19 @@
 import { HttpErrorResponse, HttpStatusCode, httpResource } from '@angular/common/http';
 import { Component, computed, effect, inject, signal } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { firstValueFrom } from 'rxjs';
 import { Notice } from '../../auth/notice/notice';
-import { CourtCard } from './court-card';
-import { CourtEditor } from './court-editor';
+import { CourtCard } from './court-card/court-card';
+import { CourtEditor } from './court-editor/court-editor';
 import { parseCourts, parseSportTypes, CourtService } from './court-service';
-import { Court, sportLook, SportType } from './court.model';
-import { DeleteCourtDialog } from './delete-court';
+import { Court, SportType } from './court.model';
+import { DeleteCourtDialog } from './delete-court/delete-court';
 
 @Component({
   selector: 'app-courts',
-  imports: [CourtCard, MatIcon],
+  imports: [CourtCard, MatButton, MatIcon],
   templateUrl: './courts.html',
   styleUrl: './courts.css',
 })
@@ -52,6 +53,9 @@ export class Courts {
       return matchesName && matchesSport;
     });
   });
+  protected readonly filtered = computed(
+    () => this.query().trim().length > 0 || this.sport() !== null,
+  );
   protected readonly countLabel = computed(() => {
     if (this.loading()) {
       return 'Cargando canchas';
@@ -69,10 +73,6 @@ export class Courts {
     });
   }
 
-  protected look(sport: SportType) {
-    return sportLook(sport);
-  }
-
   protected delay(index: number): string {
     return `${Math.min(index, 8) * 40}ms`;
   }
@@ -84,24 +84,42 @@ export class Courts {
     }
   }
 
+  protected onSport(event: Event): void {
+    const target = event.target;
+    if (target instanceof HTMLSelectElement) {
+      this.sport.set(target.value === '' ? null : target.value);
+    }
+  }
+
+  protected clearFilters(): void {
+    this.query.set('');
+    this.sport.set(null);
+  }
+
   protected retry(): void {
     this.notice.clear();
     this.courtsResource.reload();
     this.sportsResource.reload();
   }
 
+  protected create(): void {
+    this.openEditor(null);
+  }
+
   protected edit(court: Court): void {
+    this.openEditor(court);
+  }
+
+  private openEditor(court: Court | null): void {
     const full = window.innerWidth <= 700;
+    const sports = this.sportFilters();
     this.dialog.open(CourtEditor, {
       data: {
         court,
-        sportTypes: sportsFor(
-          this.sportsResource.hasValue() ? this.sportsResource.value() : [],
-          court,
-        ),
-        onSaved: (updated: Court) => this.replaceCourt(updated),
+        sportTypes: court ? sportsFor(sports, court) : sports,
+        onSaved: (saved: Court) => (court ? this.replaceCourt(saved) : this.addCourt(saved)),
       },
-      width: full ? '100vw' : '30rem',
+      width: full ? '100vw' : '40rem',
       maxWidth: full ? '100vw' : '94vw',
       height: full ? '100dvh' : undefined,
       maxHeight: full ? '100dvh' : '92vh',
@@ -111,6 +129,13 @@ export class Courts {
       exitAnimationDuration: 0,
       panelClass: full ? ['court-panel', 'court-panel-full'] : 'court-panel',
     });
+  }
+
+  private addCourt(created: Court): void {
+    this.courtsResource.update((list) =>
+      [...list, created].sort((left, right) => left.name.localeCompare(right.name, 'es')),
+    );
+    this.notice.success('Cancha creada');
   }
 
   private replaceCourt(updated: Court): void {
@@ -125,12 +150,13 @@ export class Courts {
   protected remove(court: Court): void {
     const dialogRef = this.dialog.open(DeleteCourtDialog, {
       data: court,
-      width: '26rem',
-      maxWidth: '94vw',
+      width: fullWidth() ? '100vw' : '22rem',
+      maxWidth: fullWidth() ? '100vw' : '94vw',
+      height: fullWidth() ? '100dvh' : undefined,
       ariaLabelledBy: 'delete-court-title',
       enterAnimationDuration: 0,
       exitAnimationDuration: 0,
-      panelClass: 'court-panel',
+      panelClass: fullWidth() ? ['delete-panel', 'court-panel-full'] : 'delete-panel',
     });
 
     void firstValueFrom(dialogRef.afterClosed()).then(async (confirmed) => {
@@ -155,6 +181,10 @@ export class Courts {
       }
     });
   }
+}
+
+function fullWidth(): boolean {
+  return window.innerWidth <= 700;
 }
 
 function sportsFor(sports: SportType[], court: Court): SportType[] {

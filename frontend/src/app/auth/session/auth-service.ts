@@ -13,6 +13,17 @@ export class AuthService {
       .pipe(map((body) => parseAccessToken(body)));
   }
 
+  register(
+    name: string,
+    email: string,
+    password: string,
+    confirmPassword: string,
+  ): Observable<SessionUser> {
+    return this.http
+      .post<unknown>('/api/auth/register', { name, email, password, confirmPassword })
+      .pipe(map((body) => parseSessionUser(body)));
+  }
+
   session(): Observable<SessionUser> {
     return this.http.get<unknown>('/api/auth/session').pipe(map((body) => parseSessionUser(body)));
   }

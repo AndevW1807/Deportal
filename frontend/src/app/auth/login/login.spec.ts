@@ -54,12 +54,13 @@ describe('Login', () => {
     expect(text).toContain('Ingresa a tu cuenta para continuar');
     expect(text).toContain('Recordarme');
     expect(text).toContain('¿Olvidaste tu contraseña?');
-    expect(text).toContain('Google');
-    expect(text).toContain('Apple');
+    expect(text).not.toContain('Google');
+    expect(text).not.toContain('Apple');
+    expect(text).not.toContain('o continúa con');
     expect(fixture.nativeElement.querySelector('.switch a').textContent).toContain('Crear cuenta');
     expect(form.getAttribute('action')).toBeNull();
     expect(submit.textContent).toContain('Iniciar sesión');
-    expect(fixture.nativeElement.querySelectorAll('button.provider').length).toBe(2);
+    expect(fixture.nativeElement.querySelectorAll('button.provider').length).toBe(0);
     http.expectNone('/api/auth/login');
   });
 

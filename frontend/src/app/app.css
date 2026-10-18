@@ -1,0 +1,19 @@
+.snackbar {
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  top: 5.5rem;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  max-width: min(32rem, calc(100% - 2rem));
+  margin: 0;
+  padding: 0.95rem 1.35rem;
+  border-radius: 0.8rem;
+  background: #2fdf78;
+  color: #07140f;
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 45%);
+}

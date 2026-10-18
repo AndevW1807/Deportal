@@ -3,9 +3,9 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { authInterceptor } from '../session/auth-interceptor';
+import { AuthSession } from '../session/auth-session';
 import { activeSessionGuard } from './active-session-guard';
-import { authInterceptor } from './auth-interceptor';
-import { AuthSession } from './auth-session';
 
 @Component({ template: '' })
 class Blank {}

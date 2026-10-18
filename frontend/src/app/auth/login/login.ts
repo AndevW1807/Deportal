@@ -3,20 +3,20 @@ import { Component, inject, signal } from '@angular/core';
 import { email, form, FormField, required, submit } from '@angular/forms/signals';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { viewForRole } from '../active-session-guard';
-import { AuthApi } from '../auth-api';
-import { AuthSession } from '../auth-session';
 import { AuthLayout } from '../auth-layout/auth-layout';
-import { fieldMessage } from '../field-message';
+import { fieldMessage } from '../form/field-message';
+import { viewForRole } from '../guards/active-session-guard';
+import { AuthService } from '../session/auth-service';
+import { AuthSession } from '../session/auth-session';
 
 @Component({
   imports: [AuthLayout, FormField, RouterLink],
   selector: 'app-login',
-  styleUrl: '../auth-form.css',
+  styleUrl: '../form/auth-form.css',
   templateUrl: './login.html',
 })
 export class Login {
-  private readonly auth = inject(AuthApi);
+  private readonly auth = inject(AuthService);
   private readonly session = inject(AuthSession);
   private readonly router = inject(Router);
   private readonly model = signal({

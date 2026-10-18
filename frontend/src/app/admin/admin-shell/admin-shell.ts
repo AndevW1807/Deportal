@@ -9,7 +9,7 @@ import { MatSidenav, MatSidenavContainer, MatSidenavContent } from '@angular/mat
 import { MatToolbar } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
-import { AuthApi } from '../../auth/auth-api';
+import { AuthService } from '../../auth/session/auth-service';
 
 @Component({
   imports: [
@@ -33,7 +33,7 @@ import { AuthApi } from '../../auth/auth-api';
   templateUrl: './admin-shell.html',
 })
 export class AdminShell {
-  private readonly auth = inject(AuthApi);
+  private readonly auth = inject(AuthService);
   private readonly sessionUser = toSignal(this.auth.session().pipe(catchError(() => of(null))), {
     initialValue: undefined,
   });

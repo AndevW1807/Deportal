@@ -4,7 +4,7 @@ import { Observable, map } from 'rxjs';
 import { AccessToken, SessionUser } from './session.model';
 
 @Service()
-export class AuthApi {
+export class AuthService {
   private readonly http = inject(HttpClient);
 
   login(email: string, password: string): Observable<AccessToken> {

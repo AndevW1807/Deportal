@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { authInterceptor } from '../auth-interceptor';
+import { authInterceptor } from '../session/auth-interceptor';
 import { Login } from './login';
 
 @Component({ template: '' })

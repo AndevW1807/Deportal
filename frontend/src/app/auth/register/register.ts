@@ -2,12 +2,12 @@ import { Component, signal } from '@angular/core';
 import { email, form, FormField, required, submit, validate } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { AuthLayout } from '../auth-layout/auth-layout';
-import { fieldMessage } from '../field-message';
+import { fieldMessage } from '../form/field-message';
 
 @Component({
   imports: [AuthLayout, FormField, RouterLink],
   selector: 'app-register',
-  styleUrl: '../auth-form.css',
+  styleUrl: '../form/auth-form.css',
   templateUrl: './register.html',
 })
 export class Register {

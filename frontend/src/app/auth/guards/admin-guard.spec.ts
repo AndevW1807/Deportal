@@ -3,9 +3,9 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { Courts } from '../admin/courts/courts';
-import { AuthSession } from './auth-session';
-import { authInterceptor } from './auth-interceptor';
+import { Courts } from '../../admin/courts/courts';
+import { authInterceptor } from '../session/auth-interceptor';
+import { AuthSession } from '../session/auth-session';
 import { adminGuard } from './admin-guard';
 
 @Component({ template: '' })

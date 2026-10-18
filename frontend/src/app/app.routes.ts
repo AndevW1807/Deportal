@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { activeSessionGuard } from './auth/active-session-guard';
-import { adminGuard } from './auth/admin-guard';
+import { activeSessionGuard } from './auth/guards/active-session-guard';
+import { adminGuard } from './auth/guards/admin-guard';
 
 export const routes: Routes = [
   {

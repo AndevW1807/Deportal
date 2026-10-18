@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-import { authInterceptor } from '../../auth/auth-interceptor';
+import { authInterceptor } from '../../auth/session/auth-interceptor';
 import { AdminShell } from './admin-shell';
 
 @Component({ template: '' })

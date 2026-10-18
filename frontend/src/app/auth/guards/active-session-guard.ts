@@ -2,9 +2,9 @@ import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
-import { AuthApi } from './auth-api';
-import { AuthSession } from './auth-session';
-import { SessionUser } from './session.model';
+import { AuthService } from '../session/auth-service';
+import { AuthSession } from '../session/auth-session';
+import { SessionUser } from '../session/session.model';
 
 export function viewForRole(role: SessionUser['role']): string {
   return role === 'ADMIN' ? '/admin/courts' : '/';
@@ -18,7 +18,7 @@ export const activeSessionGuard: CanActivateFn = (_route, state) => {
     return true;
   }
 
-  return inject(AuthApi)
+  return inject(AuthService)
     .session()
     .pipe(
       map((user) => {

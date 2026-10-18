@@ -4,7 +4,7 @@ import { email, form, FormField, required, submit, validate } from '@angular/for
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthLayout } from '../auth-layout/auth-layout';
-import { fieldMessage } from '../form/field-message';
+import { fieldMessage, fieldMessages } from '../form/field-message';
 import { Notice } from '../notice/notice';
 import { AuthService } from '../session/auth-service';
 
@@ -51,6 +51,7 @@ export class Register {
   protected onSubmit(event: Event): void {
     event.preventDefault();
     this.failure.set(null);
+    this.notice.clear();
     void submit(this.registerForm, async () => {
       const { name, email: address, password, confirmPassword } = this.model();
       try {
@@ -58,7 +59,23 @@ export class Register {
         this.notice.success('Registro exitoso. Ya puedes iniciar sesión.');
         await this.router.navigateByUrl('/login');
       } catch (error) {
-        this.failure.set(failureMessage(error));
+        const text = failureMessage(error);
+        this.failure.set(text);
+        this.notice.error(text);
+      }
+    }).then((accepted) => {
+      if (accepted) {
+        return;
+      }
+
+      const text = fieldMessages([
+        this.registerForm.name(),
+        this.registerForm.email(),
+        this.registerForm.password(),
+        this.registerForm.confirmPassword(),
+      ]);
+      if (text) {
+        this.notice.error(text);
       }
     });
   }

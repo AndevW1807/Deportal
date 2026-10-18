@@ -1,4 +1,4 @@
-package com.deportal.infrastructure.persistence;
+package com.deportal.infrastructure.persistence.user;
 
 import java.time.LocalDateTime;
 

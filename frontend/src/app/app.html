@@ -1,4 +1,10 @@
 @if (notice.text(); as text) {
-  <p class="snackbar" role="status">{{ text }}</p>
+  <p
+    class="snackbar"
+    [class.error]="notice.kind() === 'error'"
+    [attr.role]="notice.kind() === 'error' ? 'alert' : 'status'"
+  >
+    {{ text }}
+  </p>
 }
 <router-outlet />

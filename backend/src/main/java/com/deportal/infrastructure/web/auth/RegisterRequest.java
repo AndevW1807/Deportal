@@ -1,4 +1,4 @@
-package com.deportal.infrastructure.web;
+package com.deportal.infrastructure.web.auth;
 
 import java.util.Locale;
 

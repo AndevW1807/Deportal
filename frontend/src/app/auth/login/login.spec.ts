@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { Notice } from '../notice/notice';
 import { authInterceptor } from '../session/auth-interceptor';
 import { Login } from './login';
 
@@ -52,7 +53,8 @@ describe('Login', () => {
 
     expect(text).toContain('Inicia sesión');
     expect(text).toContain('Ingresa a tu cuenta para continuar');
-    expect(text).toContain('Recordarme');
+    expect(text).not.toContain('Recordarme');
+    expect(fixture.nativeElement.querySelector('input[type="checkbox"]')).toBeNull();
     expect(text).toContain('¿Olvidaste tu contraseña?');
     expect(text).not.toContain('Google');
     expect(text).not.toContain('Apple');
@@ -74,17 +76,14 @@ describe('Login', () => {
     await fixture.whenStable();
 
     expect(fixture.nativeElement.textContent).toContain('Correo o contraseña incorrectos');
+    expect(TestBed.inject(Notice).text()).toBe('Correo o contraseña incorrectos');
+    expect(TestBed.inject(Notice).kind()).toBe('error');
     expect(router.url).toBe('/login');
     expect(sessionStorage.getItem('deportal.accessToken')).toBeNull();
   });
 
-  it('sends an admin to the courts view and remembers the token', async () => {
+  it('sends an admin to the courts view for this browser session', async () => {
     fillCredentials('admin@admin.com', '123456');
-    const remember: HTMLInputElement = fixture.nativeElement.querySelector(
-      'input[type="checkbox"]',
-    );
-    remember.checked = true;
-    remember.dispatchEvent(new Event('input'));
     submitForm();
 
     http.expectOne('/api/auth/login').flush({
@@ -100,8 +99,8 @@ describe('Login', () => {
     await fixture.whenStable();
 
     expect(router.url).toBe('/admin/courts');
-    expect(localStorage.getItem('deportal.accessToken')).toBe('admin-token');
-    expect(sessionStorage.getItem('deportal.accessToken')).toBeNull();
+    expect(sessionStorage.getItem('deportal.accessToken')).toBe('admin-token');
+    expect(localStorage.getItem('deportal.accessToken')).toBeNull();
   });
 
   it('sends a customer back home for this browser session', async () => {
@@ -131,6 +130,8 @@ describe('Login', () => {
     await fixture.whenStable();
 
     expect(fixture.nativeElement.textContent).toContain('No se pudo conectar con el servidor');
+    expect(TestBed.inject(Notice).text()).toBe('No se pudo conectar con el servidor');
+    expect(TestBed.inject(Notice).kind()).toBe('error');
     expect(router.url).toBe('/login');
   });
 

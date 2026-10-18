@@ -8,11 +8,9 @@ export class AuthSession {
 
   readonly token = this.tokenSignal.asReadonly();
 
-  save(accessToken: string, remember: boolean): void {
-    const keep = remember ? localStorage : sessionStorage;
-    const drop = remember ? sessionStorage : localStorage;
-    drop.removeItem(TOKEN_KEY);
-    keep.setItem(TOKEN_KEY, accessToken);
+  save(accessToken: string): void {
+    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.setItem(TOKEN_KEY, accessToken);
     this.tokenSignal.set(accessToken);
   }
 

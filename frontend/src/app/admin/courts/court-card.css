@@ -1,0 +1,184 @@
+:host {
+  display: block;
+  animation: rise 200ms ease-out both;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 1.1rem 1.1rem 1rem;
+  border: 1px solid #e4ece7;
+  border-radius: 1.15rem;
+  background: #fff;
+  box-shadow: 0 0.35rem 1rem rgb(19 32 24 / 4%);
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.85rem 1.6rem rgb(19 32 24 / 8%);
+}
+
+.card.leaving {
+  animation: leave 180ms ease-in forwards;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.badge {
+  display: grid;
+  width: 2.6rem;
+  height: 2.6rem;
+  place-items: center;
+  border-radius: 0.85rem;
+}
+
+.badge mat-icon,
+.people mat-icon,
+.actions mat-icon {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+.sport,
+.people,
+.scale {
+  margin: 0;
+  color: #5d6b64;
+  font-size: 0.92rem;
+}
+
+h2 {
+  margin: 0;
+  color: #132018;
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+
+.track {
+  position: relative;
+  height: 0.45rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eef3f0;
+}
+
+.open {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: #0f6b3c;
+}
+
+.scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.scale span:nth-child(2) {
+  color: #0f6b3c;
+  font-weight: 650;
+}
+
+.facts {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.people {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.rate {
+  margin: 0;
+  color: #132018;
+  font-size: 1.2rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: auto;
+}
+
+.actions button {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  min-height: 2.75rem;
+  border: 1px solid #d7e3dc;
+  border-radius: 0.8rem;
+  background: #fff;
+  color: #173028;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.actions button:hover {
+  background: #f4faf6;
+}
+
+.actions .danger {
+  border-color: #f3d0d0;
+  color: #9f1239;
+}
+
+.actions .danger:hover {
+  background: #fff5f5;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes leave {
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host,
+  .card,
+  .card.leaving,
+  .card:hover {
+    animation: none;
+    transform: none;
+    transition: none;
+  }
+}

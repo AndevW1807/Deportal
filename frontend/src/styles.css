@@ -11,3 +11,16 @@ app-root {
 router-outlet {
   display: none;
 }
+
+.court-panel .mat-mdc-dialog-container,
+.court-panel .mat-mdc-dialog-surface {
+  background: #fff;
+  color: #132018;
+  border-radius: 1.25rem;
+}
+
+.court-panel-full .mat-mdc-dialog-container,
+.court-panel-full .mat-mdc-dialog-surface {
+  border-radius: 0;
+  min-height: 100dvh;
+}

@@ -94,23 +94,9 @@ input::placeholder {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 0.5rem 1rem;
   margin-top: 0.65rem;
-}
-
-.remember {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.95rem;
-}
-
-.remember input {
-  width: 1rem;
-  height: 1rem;
-  margin: 0;
-  accent-color: #2fdf78;
 }
 
 .forgot {

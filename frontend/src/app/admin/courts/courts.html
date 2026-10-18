@@ -1,0 +1,74 @@
+<section class="page">
+  <header class="head">
+    <div>
+      <h1>Canchas</h1>
+      <p>{{ countLabel() }}</p>
+    </div>
+    <label class="search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="search"
+        [value]="query()"
+        (input)="onQuery($event)"
+        placeholder="Buscar por nombre"
+        aria-label="Buscar por nombre"
+      />
+    </label>
+  </header>
+
+  <div class="filters" role="group" aria-label="Filtrar por deporte">
+    <button type="button" [attr.aria-pressed]="sport() === null" (click)="sport.set(null)">
+      Todos
+    </button>
+    @for (item of sportFilters(); track item.code) {
+      <button
+        type="button"
+        [attr.aria-pressed]="sport() === item.code"
+        (click)="sport.set(item.code)"
+      >
+        <mat-icon aria-hidden="true">{{ look(item).icon }}</mat-icon>
+        {{ item.name }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="grid" aria-hidden="true">
+      @for (item of skeletons; track item) {
+        <div class="skeleton"></div>
+      }
+    </div>
+  } @else if (failed()) {
+    <div class="empty">
+      <mat-icon aria-hidden="true">cloud_off</mat-icon>
+      <p>No se pudo cargar las canchas.</p>
+      <button type="button" (click)="retry()">Reintentar</button>
+    </div>
+  } @else if (registered().length === 0) {
+    <div class="empty">
+      <span class="marks" aria-hidden="true">
+        <mat-icon>sports_soccer</mat-icon>
+        <mat-icon>sports_tennis</mat-icon>
+        <mat-icon>stadium</mat-icon>
+      </span>
+      <p>Aún no hay canchas registradas</p>
+    </div>
+  } @else if (visible().length === 0) {
+    <div class="empty">
+      <mat-icon aria-hidden="true">search_off</mat-icon>
+      <p>Ninguna cancha coincide con la búsqueda</p>
+    </div>
+  } @else {
+    <div class="grid">
+      @for (court of visible(); track court.id; let index = $index) {
+        <app-court-card
+          [court]="court"
+          [leaving]="leavingId() === court.id"
+          [style.animation-delay]="delay(index)"
+          (edit)="edit($event)"
+          (remove)="remove($event)"
+        />
+      }
+    </div>
+  }
+</section>

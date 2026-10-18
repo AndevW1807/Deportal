@@ -1,4 +1,4 @@
-package com.deportal.infrastructure.web;
+package com.deportal.infrastructure.web.auth;
 
 import com.deportal.application.auth.AuthenticatedUser;
 import com.deportal.application.auth.failure.InvalidCredentials;

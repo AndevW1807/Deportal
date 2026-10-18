@@ -5,9 +5,28 @@
     [opened]="opened()"
     (openedChange)="opened.set($event)"
   >
-    <a class="brand" routerLink="/admin/courts">
-      <img ngSrc="/assets/brand/logo.webp" width="1024" height="341" alt="Deportal" priority />
-    </a>
+    <div class="sidenav-head">
+      @if (isNarrow()) {
+        <p class="profile">
+          <mat-icon>account_circle</mat-icon>
+          @if (profileName(); as name) {
+            <span>{{ name }}</span>
+          }
+        </p>
+        <button
+          matIconButton
+          type="button"
+          aria-label="Cerrar menú"
+          (click)="toggleMenu()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      } @else {
+        <a class="brand" routerLink="/admin/courts">
+          <img ngSrc="/assets/brand/logo.webp" width="1024" height="341" alt="Deportal" priority />
+        </a>
+      }
+    </div>
     <mat-nav-list aria-label="Administración">
       <a
         mat-list-item
@@ -40,13 +59,15 @@
         <a class="brand header-logo" routerLink="/admin/courts">
           <img ngSrc="/assets/brand/logo.webp" width="1024" height="341" alt="Deportal" />
         </a>
+      } @else {
+        <p class="page-title">Canchas</p>
+        <p class="profile">
+          <mat-icon>account_circle</mat-icon>
+          @if (profileName(); as name) {
+            <span>{{ name }}</span>
+          }
+        </p>
       }
-      <p class="profile">
-        <mat-icon>account_circle</mat-icon>
-        @if (profileName(); as name) {
-          <span>{{ name }}</span>
-        }
-      </p>
     </mat-toolbar>
     <main class="content">
       <router-outlet />

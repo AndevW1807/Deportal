@@ -1,17 +1,34 @@
 :host {
+  --mat-sidenav-container-shape: 0;
+  --mat-sidenav-container-elevation-shadow: none;
+  --mat-sidenav-container-background-color: #0c1210;
+  --mat-sidenav-content-background-color: #fff;
+  --mat-sidenav-container-divider-color: rgb(255 255 255 / 8%);
   display: block;
   height: 100svh;
+  background: #0c1210;
+  color: #f4f7f5;
 }
 
 .shell {
   height: 100%;
-  background: #fff;
+  background: #0c1210;
 }
 
 mat-sidenav {
-  width: 16.5rem;
-  background: #07111c;
+  width: 16.25rem;
+  border-radius: 0;
+  background: #0c1210;
   color: #f4f7f5;
+}
+
+.sidenav-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 4.5rem;
+  padding: 0.85rem 0.85rem 0.35rem 1.15rem;
 }
 
 .brand {
@@ -20,14 +37,48 @@ mat-sidenav {
   text-decoration: none;
 }
 
-mat-sidenav .brand {
-  padding: 1.15rem 1rem 0.35rem;
-}
-
 .brand img {
   display: block;
   width: auto;
-  height: 2.45rem;
+  height: 2.35rem;
+}
+
+mat-nav-list {
+  padding: 0.35rem 0.7rem 1.25rem;
+}
+
+a[mat-list-item] {
+  --mat-list-list-item-label-text-color: rgb(244 247 245 / 82%);
+  --mat-list-list-item-leading-icon-color: rgb(244 247 245 / 82%);
+  --mat-list-list-item-hover-label-text-color: #fff;
+  --mat-list-list-item-hover-leading-icon-color: #fff;
+  --mat-list-list-item-focus-label-text-color: #fff;
+  --mat-list-list-item-focus-leading-icon-color: #fff;
+  --mat-list-list-item-container-color: transparent;
+  --mat-list-list-item-hover-state-layer-color: rgb(255 255 255 / 6%);
+  --mat-list-list-item-leading-icon-start-space: 0.85rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  height: 2.8rem;
+  margin-bottom: 0.2rem;
+  color: rgb(244 247 245 / 82%);
+  font-weight: 600;
+}
+
+a[mat-list-item][aria-current='page'] {
+  --mat-list-list-item-label-text-color: #fff;
+  --mat-list-list-item-leading-icon-color: #fff;
+  --mat-list-list-item-container-color: #0f6b3c;
+  color: #fff;
+}
+
+mat-icon {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 500,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
 .workspace {
@@ -38,8 +89,14 @@ mat-sidenav .brand {
 }
 
 mat-toolbar {
-  background: #07111c;
+  background: #0c1210;
   color: #f4f7f5;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
 .profile {
@@ -50,6 +107,15 @@ mat-toolbar {
   font-weight: 600;
 }
 
+.profile mat-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #173028;
+  color: #b7f7cf;
+  font-size: 1.35rem;
+}
+
 .content {
   flex: 1;
   background: #fff;
@@ -58,9 +124,26 @@ mat-toolbar {
 }
 
 @media (max-width: 1100px) {
+  mat-sidenav {
+    width: min(19rem, 86vw);
+  }
+
   mat-toolbar {
     height: auto;
     min-height: 4rem;
     padding-top: calc(0.35rem + env(safe-area-inset-top, 0px));
+  }
+
+  .header-logo {
+    margin-left: 0.15rem;
+  }
+
+  .sidenav-head {
+    padding-top: calc(0.85rem + env(safe-area-inset-top, 0px));
+  }
+
+  .sidenav-head .profile {
+    margin: 0;
+    font-size: 1.05rem;
   }
 }

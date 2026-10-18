@@ -17,3 +17,8 @@
   text-align: center;
   box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 45%);
 }
+
+.snackbar.error {
+  background: #ff5d5d;
+  color: #2a0909;
+}

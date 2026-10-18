@@ -1,4 +1,4 @@
-package com.deportal.infrastructure.persistence;
+package com.deportal.infrastructure.persistence.user;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,12 +26,12 @@ public class UserRepositoryAdapter implements UserRepository {
 			.filter(row -> row.getDeletedAt() == null)
 			.findFirst()
 			.or(() -> rows.stream().findFirst())
-			.map(this::toDomain);
+			.map(row -> toDomain(row));
 	}
 
 	@Override
 	public Optional<UserAccount> findActiveById(Long id) {
-		return users.findByIdAndDeletedAtIsNull(id).map(this::toDomain);
+		return users.findByIdAndDeletedAtIsNull(id).map(row -> toDomain(row));
 	}
 
 	@Override

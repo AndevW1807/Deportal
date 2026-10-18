@@ -55,7 +55,7 @@ describe('activeSessionGuard', () => {
   });
 
   it('sends an active admin from login to the courts view', async () => {
-    session.save('admin-token', true);
+    session.save('admin-token');
     const pending = router.navigateByUrl('/login');
     await nextTurn();
 
@@ -66,7 +66,7 @@ describe('activeSessionGuard', () => {
   });
 
   it('sends an active admin home visit to the courts view', async () => {
-    session.save('admin-token', false);
+    session.save('admin-token');
     const pending = router.navigateByUrl('/');
     await nextTurn();
 
@@ -77,7 +77,7 @@ describe('activeSessionGuard', () => {
   });
 
   it('sends an active customer from login back home', async () => {
-    session.save('customer-token', true);
+    session.save('customer-token');
     const pending = router.navigateByUrl('/login');
     await nextTurn();
 
@@ -90,7 +90,7 @@ describe('activeSessionGuard', () => {
   });
 
   it('keeps a customer on the home page', async () => {
-    session.save('customer-token', false);
+    session.save('customer-token');
     const pending = router.navigateByUrl('/');
     await nextTurn();
 
@@ -101,7 +101,7 @@ describe('activeSessionGuard', () => {
   });
 
   it('drops an expired token and stays on login', async () => {
-    session.save('expired-token', true);
+    session.save('expired-token');
     const pending = router.navigateByUrl('/login');
     await nextTurn();
 

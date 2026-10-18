@@ -57,7 +57,7 @@ describe('adminGuard', () => {
   });
 
   it('lets an admin open the courts view', async () => {
-    session.save('admin-token', false);
+    session.save('admin-token');
     expect(session.token()).toBe('admin-token');
     const pending = router.navigateByUrl('/admin/courts');
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -77,7 +77,7 @@ describe('adminGuard', () => {
   });
 
   it('sends a customer back home', async () => {
-    session.save('customer-token', false);
+    session.save('customer-token');
     const pending = router.navigateByUrl('/admin/courts');
     await nextTurn();
 
@@ -95,7 +95,7 @@ describe('adminGuard', () => {
   });
 
   it('clears an expired session and returns to login', async () => {
-    session.save('expired-token', false);
+    session.save('expired-token');
     const pending = router.navigateByUrl('/admin/courts');
     await nextTurn();
 

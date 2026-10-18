@@ -31,5 +31,16 @@ describe('App', () => {
 
     const snackbar: HTMLElement | null = fixture.nativeElement.querySelector('[role="status"]');
     expect(snackbar?.textContent).toContain('Registro exitoso. Ya puedes iniciar sesión.');
+    expect(snackbar?.classList.contains('error')).toBe(false);
+  });
+
+  it('shows an error snackbar in the error color', () => {
+    const fixture = TestBed.createComponent(App);
+    TestBed.inject(Notice).error('Correo o contraseña incorrectos');
+    fixture.detectChanges();
+
+    const snackbar: HTMLElement | null = fixture.nativeElement.querySelector('[role="alert"]');
+    expect(snackbar?.textContent).toContain('Correo o contraseña incorrectos');
+    expect(snackbar?.classList.contains('error')).toBe(true);
   });
 });

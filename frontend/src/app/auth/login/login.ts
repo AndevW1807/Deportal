@@ -4,8 +4,9 @@ import { email, form, FormField, required, submit } from '@angular/forms/signals
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthLayout } from '../auth-layout/auth-layout';
-import { fieldMessage } from '../form/field-message';
+import { fieldMessage, fieldMessages } from '../form/field-message';
 import { viewForRole } from '../guards/active-session-guard';
+import { Notice } from '../notice/notice';
 import { AuthService } from '../session/auth-service';
 import { AuthSession } from '../session/auth-session';
 
@@ -17,12 +18,12 @@ import { AuthSession } from '../session/auth-session';
 })
 export class Login {
   private readonly auth = inject(AuthService);
+  private readonly notice = inject(Notice);
   private readonly session = inject(AuthSession);
   private readonly router = inject(Router);
   private readonly model = signal({
     email: '',
     password: '',
-    remember: false,
   });
 
   protected readonly loginForm = form(this.model, (path) => {
@@ -41,16 +42,28 @@ export class Login {
   protected onSubmit(event: Event): void {
     event.preventDefault();
     this.failure.set(null);
+    this.notice.clear();
     void submit(this.loginForm, async () => {
-      const { email: address, password, remember } = this.model();
+      const { email: address, password } = this.model();
       try {
         const token = await firstValueFrom(this.auth.login(address, password));
-        this.session.save(token.accessToken, remember);
+        this.session.save(token.accessToken);
         const user = await firstValueFrom(this.auth.session());
         await this.router.navigateByUrl(viewForRole(user.role));
       } catch (error) {
         this.session.clear();
-        this.failure.set(failureMessage(error));
+        const text = failureMessage(error);
+        this.failure.set(text);
+        this.notice.error(text);
+      }
+    }).then((accepted) => {
+      if (accepted) {
+        return;
+      }
+
+      const text = fieldMessages([this.loginForm.email(), this.loginForm.password()]);
+      if (text) {
+        this.notice.error(text);
       }
     });
   }

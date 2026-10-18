@@ -98,6 +98,8 @@ describe('Register', () => {
     await fixture.whenStable();
 
     expect(fixture.nativeElement.textContent).toContain('Las contraseñas no coinciden');
+    expect(TestBed.inject(Notice).text()).toBe('Las contraseñas no coinciden');
+    expect(TestBed.inject(Notice).kind()).toBe('error');
     http.expectNone('/api/auth/register');
   });
 
@@ -124,6 +126,7 @@ describe('Register', () => {
 
     expect(router.url).toBe('/login');
     expect(TestBed.inject(Notice).text()).toBe('Registro exitoso. Ya puedes iniciar sesión.');
+    expect(TestBed.inject(Notice).kind()).toBe('success');
     expect(sessionStorage.getItem('deportal.accessToken')).toBeNull();
     expect(localStorage.getItem('deportal.accessToken')).toBeNull();
     http.expectNone('/api/auth/login');
@@ -140,7 +143,8 @@ describe('Register', () => {
 
     expect(fixture.nativeElement.textContent).toContain('Ese correo ya está registrado');
     expect(fixture.nativeElement.textContent).not.toContain('Email already registered');
-    expect(TestBed.inject(Notice).text()).toBeNull();
+    expect(TestBed.inject(Notice).text()).toBe('Ese correo ya está registrado');
+    expect(TestBed.inject(Notice).kind()).toBe('error');
     expect(router.url).toBe('/register');
     expect(sessionStorage.getItem('deportal.accessToken')).toBeNull();
   });
@@ -153,6 +157,8 @@ describe('Register', () => {
     await fixture.whenStable();
 
     expect(fixture.nativeElement.textContent).toContain('No se pudo conectar con el servidor');
+    expect(TestBed.inject(Notice).text()).toBe('No se pudo conectar con el servidor');
+    expect(TestBed.inject(Notice).kind()).toBe('error');
     expect(router.url).toBe('/register');
   });
 

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { HomeFooter } from './home-footer';
 
 describe('HomeFooter', () => {
@@ -8,6 +9,7 @@ describe('HomeFooter', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomeFooter],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeFooter);
@@ -28,5 +30,8 @@ describe('HomeFooter', () => {
     expect(text).toContain('Conoce nuevos deportistas');
     expect(text).toContain('Organiza partidos y eventos');
     expect(text).toContain('Forma parte de una comunidad activa');
+    expect(fixture.nativeElement.querySelector('a[href="/register"]').textContent).toContain(
+      'Únete ahora',
+    );
   });
 });

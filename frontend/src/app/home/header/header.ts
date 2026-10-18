@@ -1,10 +1,13 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-  imports: [NgOptimizedImage],
+  imports: [NgOptimizedImage, RouterLink, RouterLinkActive],
   selector: 'app-header',
   styleUrl: './header.css',
   templateUrl: './header.html',
 })
-export class Header {}
+export class Header {
+  readonly showHomeLink = input(false);
+}

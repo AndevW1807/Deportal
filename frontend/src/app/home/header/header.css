@@ -1,6 +1,6 @@
 :host {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   top: 0;
   right: 0;
   left: 0;
@@ -19,6 +19,8 @@
 
 .brand {
   margin: 0;
+  line-height: 0;
+  text-decoration: none;
 }
 
 .brand img {
@@ -33,7 +35,7 @@
   gap: 0.7rem;
 }
 
-button {
+.actions a {
   padding: 0.7rem 1.35rem;
   border: 1px solid rgb(255 255 255 / 72%);
   border-radius: 0.4rem;
@@ -43,22 +45,33 @@ button {
   font-size: 0.95rem;
   font-weight: 600;
   white-space: nowrap;
+  text-decoration: none;
   cursor: pointer;
 }
 
-button:focus-visible {
+.actions a.home {
+  padding-inline: 0.35rem;
+  border-color: transparent;
+  background: transparent;
+}
+
+.actions a:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
 
-.register {
+.actions a.register {
   border-color: #2fdf78;
   background: #2fdf78;
   color: #07140f;
 }
 
-.register:focus-visible {
+.actions a.register:focus-visible {
   outline-color: #2fdf78;
+}
+
+.home-icon {
+  display: none;
 }
 
 @media (min-width: 1101px) {
@@ -70,9 +83,13 @@ button:focus-visible {
     gap: 0.85rem;
   }
 
-  button {
+  .actions a {
     padding: 0.85rem 1.55rem;
     font-size: 1.05rem;
+  }
+
+  .actions a.home {
+    padding-inline: 0.4rem;
   }
 }
 
@@ -84,6 +101,7 @@ button:focus-visible {
 
 @media (max-width: 767px) {
   .bar {
+    padding-top: calc(0.85rem + env(safe-area-inset-top, 0px));
     padding-inline: 1.25rem;
   }
 
@@ -93,5 +111,28 @@ button:focus-visible {
 
   .actions {
     display: none;
+  }
+
+  .home-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-left: auto;
+    border-radius: 999px;
+    background: rgb(7 17 28 / 55%);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .home-icon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .home-icon:focus-visible {
+    outline: 2px solid #2fdf78;
+    outline-offset: 3px;
   }
 }

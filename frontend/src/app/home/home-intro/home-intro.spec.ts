@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { HomeIntro } from './home-intro';
 
 describe('HomeIntro', () => {
@@ -8,6 +9,7 @@ describe('HomeIntro', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HomeIntro],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeIntro);
@@ -31,5 +33,11 @@ describe('HomeIntro', () => {
     expect(text).toContain('Disponibilidad en tiempo real');
     expect(text).toContain('Pagos seguros y descuentos');
     expect(text).toContain('Prioridad para miembros');
+    expect(fixture.nativeElement.querySelector('a[href="/register"]').textContent).toContain(
+      'Registrarse',
+    );
+    expect(fixture.nativeElement.querySelector('a[href="/login"]').textContent).toContain(
+      'Iniciar sesión',
+    );
   });
 });

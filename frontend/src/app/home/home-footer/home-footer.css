@@ -46,7 +46,7 @@ img {
 }
 
 .eyebrow::before {
-  content: "";
+  content: '';
   width: 1.6rem;
   height: 2px;
   background: #2fdf78;
@@ -73,7 +73,9 @@ h2 span {
   line-height: 1.45;
 }
 
-button {
+.copy a {
+  display: inline-block;
+  box-sizing: border-box;
   margin-top: 0.8rem;
   padding: 0.8rem 1.35rem;
   border: 0;
@@ -83,10 +85,12 @@ button {
   font: inherit;
   font-size: 1rem;
   font-weight: 700;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
 }
 
-button:focus-visible {
+.copy a:focus-visible {
   outline: 2px solid #2fdf78;
   outline-offset: 3px;
 }
@@ -137,7 +141,7 @@ svg {
   }
 
   .community::before {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg, rgb(7 17 28 / 62%), rgb(7 17 28 / 86%));
@@ -147,7 +151,7 @@ svg {
     padding: 0;
   }
 
-  button {
+  .copy a {
     width: 100%;
   }
 

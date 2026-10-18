@@ -48,7 +48,11 @@ h1 span {
   margin-top: 1.4rem;
 }
 
-button {
+.actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   padding: 0.8rem 1.3rem;
   border: 1px solid rgb(255 255 255 / 72%);
   border-radius: 0.55rem;
@@ -57,21 +61,22 @@ button {
   font: inherit;
   font-size: 1rem;
   font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
 }
 
-button:focus-visible {
+.actions a:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
 
-.register {
+.actions a.register {
   border-color: #2fdf78;
   background: #2fdf78;
   color: #07140f;
 }
 
-.register:focus-visible {
+.actions a.register:focus-visible {
   outline-color: #2fdf78;
 }
 
@@ -127,7 +132,7 @@ svg {
     margin-top: 1.85rem;
   }
 
-  button {
+  .actions a {
     padding: 1.2rem 2.15rem;
     font-size: 1.2rem;
   }
@@ -170,7 +175,7 @@ svg {
     flex-direction: column;
   }
 
-  button {
+  .actions a {
     width: 100%;
   }
 }

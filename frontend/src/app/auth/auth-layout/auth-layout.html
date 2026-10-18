@@ -1,0 +1,22 @@
+<div class="stage">
+  <img
+    class="photo"
+    ngSrc="/assets/auth/background.webp"
+    width="1024"
+    height="682"
+    alt="Deportista atándose las zapatillas en la cancha al atardecer"
+    priority
+  />
+  <div class="scrim" aria-hidden="true"></div>
+  <app-header [showHomeLink]="true" />
+</div>
+<div class="panel">
+  <a class="back" routerLink="/">Volver al inicio</a>
+  <div class="card">
+    <div class="brand">
+      <img class="mark" ngSrc="/assets/brand/logo.webp" width="1024" height="341" alt="Deportal" />
+      <p class="tagline">Reserva, juega y vive el deporte en un solo lugar.</p>
+    </div>
+    <ng-content />
+  </div>
+</div>

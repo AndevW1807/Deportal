@@ -20,6 +20,7 @@ mat-sidenav {
   border-radius: 0;
   background: #0c1210;
   color: #f4f7f5;
+  font-family: system-ui, sans-serif;
 }
 
 .sidenav-head {
@@ -72,6 +73,7 @@ mat-nav-list:not(.session) {
   --mat-list-list-item-container-color: transparent;
   --mat-list-list-item-hover-state-layer-color: rgb(255 255 255 / 6%);
   --mat-list-list-item-leading-icon-start-space: 0.85rem;
+  appearance: none;
   border: 0;
   border-radius: 0.75rem;
   overflow: hidden;
@@ -191,6 +193,9 @@ mat-toolbar {
 
   .sidenav-head .profile {
     margin: 0;
-    font-size: 1.05rem;
+    font-family: system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 650;
+    letter-spacing: normal;
   }
 }

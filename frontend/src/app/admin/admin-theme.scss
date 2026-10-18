@@ -1,0 +1,15 @@
+@use '@angular/material' as mat;
+
+app-admin-shell {
+  color-scheme: dark;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$green-palette,
+        theme-type: dark,
+      ),
+      typography: system-ui,
+      density: 0,
+    )
+  );
+}

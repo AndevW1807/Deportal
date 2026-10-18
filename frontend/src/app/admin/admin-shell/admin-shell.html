@@ -1,0 +1,55 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav
+    id="admin-menu"
+    [mode]="isNarrow() ? 'over' : 'side'"
+    [opened]="opened()"
+    (openedChange)="opened.set($event)"
+  >
+    <a class="brand" routerLink="/admin/courts">
+      <img ngSrc="/assets/brand/logo.webp" width="1024" height="341" alt="Deportal" priority />
+    </a>
+    <mat-nav-list aria-label="Administración">
+      <a
+        mat-list-item
+        routerLink="/admin/courts"
+        routerLinkActive
+        #courtsLink="routerLinkActive"
+        [activated]="courtsLink.isActive"
+        ariaCurrentWhenActive="page"
+        (click)="closeIfNarrow()"
+      >
+        <mat-icon matListItemIcon>stadium</mat-icon>
+        <span matListItemTitle>Canchas</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="workspace">
+    <mat-toolbar>
+      @if (isNarrow()) {
+        <button
+          matIconButton
+          type="button"
+          aria-controls="admin-menu"
+          [attr.aria-expanded]="opened()"
+          aria-label="Abrir menú"
+          (click)="toggleMenu()"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+        <a class="brand header-logo" routerLink="/admin/courts">
+          <img ngSrc="/assets/brand/logo.webp" width="1024" height="341" alt="Deportal" />
+        </a>
+      }
+      <p class="profile">
+        <mat-icon>account_circle</mat-icon>
+        @if (profileName(); as name) {
+          <span>{{ name }}</span>
+        }
+      </p>
+    </mat-toolbar>
+    <main class="content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

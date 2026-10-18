@@ -108,7 +108,7 @@
     justify-content: flex-start;
     box-sizing: border-box;
     min-height: 100svh;
-    padding: 7rem 3rem 2.5rem 6rem;
+    padding: 7rem 7rem 2.5rem 20rem;
     pointer-events: none;
   }
 

@@ -110,7 +110,18 @@
       <button class="forgot" type="button">¿Olvidaste tu contraseña?</button>
     </div>
 
-    <button class="submit" type="submit">Iniciar sesión <span aria-hidden="true">→</span></button>
+    @if (failure(); as error) {
+      <p class="error" role="alert">{{ error }}</p>
+    }
+
+    <button
+      class="submit"
+      type="submit"
+      [disabled]="loginForm().submitting()"
+      [attr.aria-busy]="loginForm().submitting() ? true : null"
+    >
+      Iniciar sesión <span aria-hidden="true">→</span>
+    </button>
 
     <p class="divider">o continúa con</p>
     <div class="providers">

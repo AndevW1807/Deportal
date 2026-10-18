@@ -53,7 +53,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CourtControllerTest {
 
 	private static final String COURT = """
-			{"name":"Cancha Norte","sportTypeCode":"FOOTBALL","capacity":10,"opensAt":"06:00","closesAt":"22:00","hourlyRate":"20.00"}
+			{"name":"Cancha Norte","sportTypeCode":"FOOTBALL","capacity":10,\
+			"opensAt":"06:00","closesAt":"22:00","hourlyRate":"20.00"}
 			""";
 
 	@Autowired

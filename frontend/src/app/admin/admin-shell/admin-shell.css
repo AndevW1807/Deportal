@@ -50,32 +50,19 @@ mat-sidenav {
 }
 
 mat-nav-list {
+  padding: 0.35rem 0.7rem 0.35rem;
+}
+
+mat-nav-list:not(.session) {
   flex: 1;
-  padding: 0.35rem 0.7rem 1.25rem;
 }
 
-.logout {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  margin: 0.35rem 0.7rem 1rem;
-  min-height: 2.8rem;
-  padding: 0 0.85rem;
-  border: 0;
-  border-radius: 0.75rem;
-  background: transparent;
-  color: rgb(244 247 245 / 82%);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
+.session {
+  margin-top: auto;
+  padding-bottom: 1rem;
 }
 
-.logout:hover {
-  background: rgb(255 255 255 / 6%);
-  color: #fff;
-}
-
-a[mat-list-item] {
+:is(a, button)[mat-list-item] {
   --mat-list-list-item-label-text-color: rgb(244 247 245 / 82%);
   --mat-list-list-item-leading-icon-color: rgb(244 247 245 / 82%);
   --mat-list-list-item-hover-label-text-color: #fff;
@@ -85,12 +72,23 @@ a[mat-list-item] {
   --mat-list-list-item-container-color: transparent;
   --mat-list-list-item-hover-state-layer-color: rgb(255 255 255 / 6%);
   --mat-list-list-item-leading-icon-start-space: 0.85rem;
+  border: 0;
   border-radius: 0.75rem;
   overflow: hidden;
   height: 2.8rem;
   margin-bottom: 0.2rem;
   color: rgb(244 247 245 / 82%);
+  font-family: system-ui, sans-serif;
+  font-size: 1rem;
   font-weight: 600;
+  letter-spacing: normal;
+}
+
+:is(a, button)[mat-list-item] .mdc-list-item__primary-text {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
 }
 
 a[mat-list-item][aria-current='page'] {

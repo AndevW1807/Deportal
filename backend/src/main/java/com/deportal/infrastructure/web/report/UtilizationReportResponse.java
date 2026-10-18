@@ -14,8 +14,8 @@ public record UtilizationReportResponse(int reservations, BigDecimal reservedHou
 				report.courts()
 					.stream()
 					.map(court -> new CourtUtilizationResponse(court.id(), court.name(), court.sportName(),
-							court.reservations(), court.reservedHours(), court.availableHours(), court.occupancyRate(),
-							court.income()))
+							court.reservations(), court.reservedHours(), court.availableHours(),
+							court.occupancyRate(), court.income()))
 					.toList());
 	}
 

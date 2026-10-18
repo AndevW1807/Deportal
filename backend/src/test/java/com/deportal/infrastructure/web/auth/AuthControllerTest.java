@@ -177,7 +177,10 @@ class AuthControllerTest {
 	}
 
 	private static void assertNoSecrets(String body) {
-		org.assertj.core.api.Assertions.assertThat(body).doesNotContain("password").doesNotContain("passwordHash").doesNotContain(PASSWORD);
+		org.assertj.core.api.Assertions.assertThat(body)
+			.doesNotContain("password")
+			.doesNotContain("passwordHash")
+			.doesNotContain(PASSWORD);
 	}
 
 }

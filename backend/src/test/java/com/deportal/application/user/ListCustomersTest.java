@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.deportal.domain.user.CustomerNotFound;
 import com.deportal.domain.user.MembershipType;
 import com.deportal.domain.user.UserAccount;
 import com.deportal.domain.user.UserRepository;
@@ -13,7 +12,6 @@ import com.deportal.domain.user.UserRole;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ListCustomersTest {
 

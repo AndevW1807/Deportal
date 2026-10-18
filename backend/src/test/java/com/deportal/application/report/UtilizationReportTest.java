@@ -9,7 +9,6 @@ import java.util.Optional;
 import com.deportal.domain.court.Court;
 import com.deportal.domain.court.CourtRepository;
 import com.deportal.domain.court.CourtReservationUse;
-import com.deportal.domain.court.ReservationUsage;
 import com.deportal.domain.court.SportType;
 import com.deportal.domain.court.SportTypeCatalog;
 import com.deportal.domain.report.failure.InvalidReportPeriod;

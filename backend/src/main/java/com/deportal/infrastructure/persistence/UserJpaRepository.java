@@ -11,4 +11,6 @@ public interface UserJpaRepository extends Repository<UserJpaEntity, Long> {
 
 	Optional<UserJpaEntity> findByIdAndDeletedAtIsNull(Long id);
 
+	UserJpaEntity save(UserJpaEntity account);
+
 }

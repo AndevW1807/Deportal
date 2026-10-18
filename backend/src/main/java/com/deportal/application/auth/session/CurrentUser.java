@@ -1,5 +1,7 @@
-package com.deportal.application.auth;
+package com.deportal.application.auth.session;
 
+import com.deportal.application.auth.AuthenticatedUser;
+import com.deportal.application.auth.failure.InvalidCredentials;
 import com.deportal.domain.user.UserAccount;
 import com.deportal.domain.user.UserRepository;
 

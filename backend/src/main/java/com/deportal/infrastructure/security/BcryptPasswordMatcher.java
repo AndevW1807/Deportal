@@ -1,6 +1,6 @@
 package com.deportal.infrastructure.security;
 
-import com.deportal.application.auth.PasswordMatcher;
+import com.deportal.application.auth.port.PasswordMatcher;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

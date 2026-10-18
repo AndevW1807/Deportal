@@ -1,7 +1,11 @@
-package com.deportal.application.auth;
+package com.deportal.application.auth.login;
 
 import java.util.Optional;
 
+import com.deportal.application.auth.AuthenticatedUser;
+import com.deportal.application.auth.failure.InvalidCredentials;
+import com.deportal.application.auth.failure.PasswordTooLong;
+import com.deportal.application.auth.port.PasswordMatcher;
 import com.deportal.domain.user.MembershipType;
 import com.deportal.domain.user.UserAccount;
 import com.deportal.domain.user.UserRepository;
@@ -78,6 +82,11 @@ class LoginTest {
 			@Override
 			public Optional<UserAccount> findActiveById(Long id) {
 				return Optional.ofNullable(user);
+			}
+
+			@Override
+			public UserAccount save(UserAccount account) {
+				throw new UnsupportedOperationException();
 			}
 		};
 	}

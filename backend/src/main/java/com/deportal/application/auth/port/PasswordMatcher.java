@@ -1,4 +1,4 @@
-package com.deportal.application.auth;
+package com.deportal.application.auth.port;
 
 public interface PasswordMatcher {
 

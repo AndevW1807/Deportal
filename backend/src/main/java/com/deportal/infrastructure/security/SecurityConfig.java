@@ -86,7 +86,7 @@ public class SecurityConfig {
 			.formLogin(form -> form.disable())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll()
 				.anyRequest().authenticated())
 			.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()).authenticationEntryPoint(entryPoint))
 			.exceptionHandling(exceptions -> exceptions.authenticationEntryPoint(entryPoint))

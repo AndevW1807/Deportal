@@ -45,6 +45,16 @@ public class UserJpaEntity {
 	protected UserJpaEntity() {
 	}
 
+	static UserJpaEntity newAccount(String name, String email, String passwordHash, UserRole role, MembershipType type) {
+		UserJpaEntity account = new UserJpaEntity();
+		account.name = name;
+		account.email = email;
+		account.passwordHash = passwordHash;
+		account.role = role;
+		account.type = type;
+		return account;
+	}
+
 	public Long getId() {
 		return id;
 	}

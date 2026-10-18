@@ -1,7 +1,9 @@
 package com.deportal.infrastructure.web;
 
-import com.deportal.application.auth.InvalidCredentials;
-import com.deportal.application.auth.PasswordTooLong;
+import com.deportal.application.auth.failure.InvalidCredentials;
+import com.deportal.application.auth.failure.InvalidRegistration;
+import com.deportal.application.auth.failure.PasswordTooLong;
+import com.deportal.domain.user.EmailAlreadyUsed;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -18,8 +20,13 @@ public class AuthExceptionHandler {
 		return problem(HttpStatus.UNAUTHORIZED, "Unauthorized", InvalidCredentials.MESSAGE);
 	}
 
+	@ExceptionHandler(EmailAlreadyUsed.class)
+	ProblemDetail emailAlreadyUsed() {
+		return problem(HttpStatus.CONFLICT, "Conflict", EmailAlreadyUsed.MESSAGE);
+	}
+
 	@ExceptionHandler({ MethodArgumentNotValidException.class, HttpMessageNotReadableException.class,
-			PasswordTooLong.class })
+			PasswordTooLong.class, InvalidRegistration.class })
 	ProblemDetail invalidRequest() {
 		return problem(HttpStatus.BAD_REQUEST, "Bad Request", "Invalid request");
 	}

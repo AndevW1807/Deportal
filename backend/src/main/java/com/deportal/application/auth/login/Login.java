@@ -1,15 +1,17 @@
-package com.deportal.application.auth;
+package com.deportal.application.auth.login;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
 
+import com.deportal.application.auth.AuthenticatedUser;
+import com.deportal.application.auth.failure.InvalidCredentials;
+import com.deportal.application.auth.failure.PasswordTooLong;
+import com.deportal.application.auth.port.PasswordMatcher;
 import com.deportal.domain.user.UserAccount;
 import com.deportal.domain.user.UserRepository;
 
 public final class Login {
-
-	static final int MAX_PASSWORD_BYTES = 72;
 
 	private final UserRepository users;
 	private final PasswordMatcher passwords;
@@ -23,7 +25,7 @@ public final class Login {
 		if (password == null) {
 			throw new InvalidCredentials();
 		}
-		if (password.getBytes(StandardCharsets.UTF_8).length > MAX_PASSWORD_BYTES) {
+		if (password.getBytes(StandardCharsets.UTF_8).length > PasswordTooLong.MAX_BYTES) {
 			throw new PasswordTooLong();
 		}
 		String normalized = normalize(email);

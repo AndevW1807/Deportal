@@ -1,4 +1,4 @@
-package com.deportal.application.auth;
+package com.deportal.application.auth.failure;
 
 public final class InvalidCredentials extends RuntimeException {
 

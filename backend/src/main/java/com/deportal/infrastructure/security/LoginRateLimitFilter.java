@@ -27,7 +27,7 @@ public class LoginRateLimitFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		if (!isLogin(request)) {
+		if (!isLimited(request)) {
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -36,15 +36,26 @@ public class LoginRateLimitFilter extends OncePerRequestFilter {
 			response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
 			ProblemDetail problem = ProblemDetail.forStatus(429);
 			problem.setTitle("Too Many Requests");
-			problem.setDetail("Too many login attempts");
+			problem.setDetail(detail(request));
 			objectMapper.writeValue(response.getOutputStream(), problem);
 			return;
 		}
 		filterChain.doFilter(request, response);
 	}
 
-	private static boolean isLogin(HttpServletRequest request) {
-		return HttpMethod.POST.matches(request.getMethod()) && "/api/auth/login".equals(request.getServletPath());
+	private static boolean isLimited(HttpServletRequest request) {
+		if (!HttpMethod.POST.matches(request.getMethod())) {
+			return false;
+		}
+		String path = request.getServletPath();
+		return "/api/auth/login".equals(path) || "/api/auth/register".equals(path);
+	}
+
+	private static String detail(HttpServletRequest request) {
+		if ("/api/auth/register".equals(request.getServletPath())) {
+			return "Too many registration attempts";
+		}
+		return "Too many login attempts";
 	}
 
 }

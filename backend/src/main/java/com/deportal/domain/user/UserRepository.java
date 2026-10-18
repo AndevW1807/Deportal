@@ -8,4 +8,6 @@ public interface UserRepository {
 
 	Optional<UserAccount> findActiveById(Long id);
 
+	UserAccount save(UserAccount account);
+
 }

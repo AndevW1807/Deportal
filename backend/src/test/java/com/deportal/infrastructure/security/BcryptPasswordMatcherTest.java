@@ -10,6 +10,8 @@ class BcryptPasswordMatcherTest {
 
 	private final BcryptPasswordMatcher matcher = new BcryptPasswordMatcher();
 
+	private final BcryptPasswordHasher hasher = new BcryptPasswordHasher();
+
 	@Test
 	void acceptsTheSeededDemoPassword() {
 		assertThat(matcher.matches("Deportal#2026", JUAN_HASH)).isTrue();
@@ -18,6 +20,14 @@ class BcryptPasswordMatcherTest {
 	@Test
 	void dummyHashDoesNotMatchTheDemoPassword() {
 		assertThat(matcher.matches("Deportal#2026", matcher.dummyHash())).isFalse();
+	}
+
+	@Test
+	void storesAHashThatCanBeCheckedLater() {
+		String hash = hasher.hash("secret-value");
+
+		assertThat(hash).doesNotContain("secret-value");
+		assertThat(matcher.matches("secret-value", hash)).isTrue();
 	}
 
 }

@@ -24,24 +24,26 @@
           <mat-icon>close</mat-icon>
         </button>
       } @else {
-        <a class="brand" routerLink="/admin/courts">
+        <a class="brand" [routerLink]="homeLink()">
           <img ngSrc="/assets/brand/logo.webp" width="1024" height="341" alt="Deportal" priority />
         </a>
       }
     </div>
-    <mat-nav-list aria-label="Administración">
-      <a
-        mat-list-item
-        routerLink="/admin/courts"
-        routerLinkActive
-        #courtsLink="routerLinkActive"
-        [activated]="courtsLink.isActive"
-        ariaCurrentWhenActive="page"
-        (click)="closeIfNarrow()"
-      >
-        <mat-icon matListItemIcon>stadium</mat-icon>
-        <span matListItemTitle>Canchas</span>
-      </a>
+    <mat-nav-list aria-label="Menú">
+      @for (item of menu(); track item.link) {
+        <a
+          mat-list-item
+          [routerLink]="item.link"
+          routerLinkActive
+          #itemLink="routerLinkActive"
+          [activated]="itemLink.isActive"
+          ariaCurrentWhenActive="page"
+          (click)="closeIfNarrow()"
+        >
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
     </mat-nav-list>
   </mat-sidenav>
 
@@ -58,11 +60,13 @@
         >
           <mat-icon>menu</mat-icon>
         </button>
-        <a class="brand header-logo" routerLink="/admin/courts">
+        <a class="brand header-logo" [routerLink]="homeLink()">
           <img ngSrc="/assets/brand/logo.webp" width="1024" height="341" alt="Deportal" />
         </a>
       } @else {
-        <p class="page-title">Canchas</p>
+        @if (pageTitle()) {
+          <p class="page-title">{{ pageTitle() }}</p>
+        }
         <p class="profile">
           <span class="avatar" aria-hidden="true">
             <mat-icon>person</mat-icon>

@@ -1,0 +1,57 @@
+<section class="page">
+  <header class="head">
+    <div>
+      <h1>Usuarios</h1>
+      <p class="help">Cambia la membresía de los clientes.</p>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <label class="search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        type="search"
+        [value]="query()"
+        (input)="onQuery($event)"
+        placeholder="Buscar por nombre"
+        aria-label="Buscar por nombre"
+      />
+    </label>
+    @if (filtering()) {
+      <button type="button" class="clear" (click)="clearQuery()">Limpiar filtros</button>
+    }
+  </div>
+
+  <p class="count">{{ countLabel() }}</p>
+
+  @if (loading()) {
+    <div class="list" aria-hidden="true">
+      @for (item of [0, 1, 2]; track item) {
+        <div class="skeleton"></div>
+      }
+    </div>
+  } @else if (customers().length === 0) {
+    <p class="empty">Aún no hay clientes registrados.</p>
+  } @else if (visible().length === 0) {
+    <p class="empty">Ningún cliente coincide con la búsqueda.</p>
+  } @else {
+    <ul class="list">
+      @for (customer of visible(); track customer.id) {
+        <li>
+          <div>
+            <h2>{{ customer.name }}</h2>
+            <p>{{ customer.email }}</p>
+          </div>
+          <mat-slide-toggle
+            [checked]="member(customer)"
+            [disabled]="busy(customer.id)"
+            (change)="onMembership(customer, $event)"
+            [attr.aria-label]="'Membresía de ' + customer.name"
+          >
+            {{ label(customer) }}
+          </mat-slide-toggle>
+        </li>
+      }
+    </ul>
+  }
+</section>

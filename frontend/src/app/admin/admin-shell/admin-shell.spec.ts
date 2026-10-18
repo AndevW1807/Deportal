@@ -15,11 +15,14 @@ describe('AdminShell', () => {
   let fixture: ComponentFixture<AdminShell>;
   let http: HttpTestingController;
 
-  async function setup(narrow: boolean): Promise<void> {
+  async function setup(narrow: boolean, role: 'ADMIN' | 'CUSTOMER' = 'ADMIN'): Promise<void> {
     await TestBed.configureTestingModule({
       imports: [AdminShell],
       providers: [
-        provideRouter([{ path: 'admin/courts', component: Blank }]),
+        provideRouter([
+          { path: 'app', component: Blank },
+          { path: 'admin/courts', component: Blank },
+        ]),
         provideHttpClient(withInterceptors([authInterceptor])),
         provideHttpClientTesting(),
         {
@@ -33,9 +36,9 @@ describe('AdminShell', () => {
     fixture = TestBed.createComponent(AdminShell);
     http.expectOne('/api/auth/session').flush({
       id: 1,
-      name: 'Admin',
-      email: 'admin@admin.com',
-      role: 'ADMIN',
+      name: role === 'ADMIN' ? 'Admin' : 'Ana',
+      email: role === 'ADMIN' ? 'admin@admin.com' : 'ana@deportal.test',
+      role,
       type: 'MEMBER',
     });
     await fixture.whenStable();
@@ -47,15 +50,28 @@ describe('AdminShell', () => {
 
   it('shows Canchas and the signed-in name', async () => {
     await setup(false);
-    const link: HTMLAnchorElement = fixture.nativeElement.querySelector('a[mat-list-item]');
+    const links: NodeListOf<HTMLAnchorElement> =
+      fixture.nativeElement.querySelectorAll('a[mat-list-item]');
     const profile: HTMLElement = fixture.nativeElement.querySelector('.profile');
 
-    expect(link.textContent).toContain('Canchas');
-    expect(link.getAttribute('href')).toBe('/admin/courts');
+    expect(links[0].textContent).toContain('Canchas');
+    expect(links[0].getAttribute('href')).toBe('/admin/courts');
+    expect(links[1].textContent).toContain('Usuarios');
+    expect(links[1].getAttribute('href')).toBe('/admin/users');
     expect(profile.tagName).toBe('P');
     expect(profile.textContent).toContain('Admin');
     expect(fixture.nativeElement.querySelector('button.profile')).toBeNull();
     expect(fixture.nativeElement.querySelector('[aria-label="Abrir menú"]')).toBeNull();
+  });
+
+  it('hides Canchas from a customer', async () => {
+    await setup(false, 'CUSTOMER');
+    const brand: HTMLAnchorElement = fixture.nativeElement.querySelector('a.brand');
+
+    expect(fixture.nativeElement.querySelector('a[mat-list-item]')).toBeNull();
+    expect(fixture.nativeElement.textContent).not.toContain('Canchas');
+    expect(fixture.nativeElement.textContent).not.toContain('Usuarios');
+    expect(brand.getAttribute('href')).toBe('/app');
   });
 
   it('opens the menu from the toolbar and closes it from the backdrop', async () => {

@@ -7,7 +7,7 @@ import { AuthSession } from '../session/auth-session';
 import { SessionUser } from '../session/session.model';
 
 export function viewForRole(role: SessionUser['role']): string {
-  return role === 'ADMIN' ? '/admin/courts' : '/';
+  return role === 'ADMIN' ? '/admin/courts' : '/app';
 }
 
 export const activeSessionGuard: CanActivateFn = (_route, state) => {

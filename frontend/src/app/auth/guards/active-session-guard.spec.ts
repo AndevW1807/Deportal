@@ -28,6 +28,7 @@ describe('activeSessionGuard', () => {
         provideRouter([
           { path: '', component: Blank, canActivate: [activeSessionGuard] },
           { path: 'login', component: Blank, canActivate: [activeSessionGuard] },
+          { path: 'app', component: Blank },
           { path: 'admin/courts', component: Blank },
         ]),
         provideHttpClient(withInterceptors([authInterceptor])),
@@ -76,20 +77,18 @@ describe('activeSessionGuard', () => {
     expect(router.url).toBe('/admin/courts');
   });
 
-  it('sends an active customer from login back home', async () => {
+  it('sends an active customer from login to the app', async () => {
     session.save('customer-token');
     const pending = router.navigateByUrl('/login');
     await nextTurn();
 
     http.expectOne('/api/auth/session').flush(sessionUser('CUSTOMER'));
-    await nextTurn();
-    http.expectOne('/api/auth/session').flush(sessionUser('CUSTOMER'));
     await pending;
 
-    expect(router.url).toBe('/');
+    expect(router.url).toBe('/app');
   });
 
-  it('keeps a customer on the home page', async () => {
+  it('sends an active customer home visit to the app', async () => {
     session.save('customer-token');
     const pending = router.navigateByUrl('/');
     await nextTurn();
@@ -97,7 +96,7 @@ describe('activeSessionGuard', () => {
     http.expectOne('/api/auth/session').flush(sessionUser('CUSTOMER'));
     await pending;
 
-    expect(router.url).toBe('/');
+    expect(router.url).toBe('/app');
   });
 
   it('drops an expired token and stays on login', async () => {

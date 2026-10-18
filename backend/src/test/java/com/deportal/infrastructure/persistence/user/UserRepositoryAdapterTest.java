@@ -29,6 +29,11 @@ class UserRepositoryAdapterTest {
 			}
 
 			@Override
+			public List<UserJpaEntity> findByRoleAndDeletedAtIsNullOrderByNameAsc(UserRole role) {
+				return List.of();
+			}
+
+			@Override
 			public UserJpaEntity save(UserJpaEntity account) {
 				throw new DataIntegrityViolationException("duplicate active email");
 			}

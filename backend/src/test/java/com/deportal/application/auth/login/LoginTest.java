@@ -85,6 +85,11 @@ class LoginTest {
 			}
 
 			@Override
+			public java.util.List<UserAccount> findActiveCustomers() {
+				return java.util.List.of();
+			}
+
+			@Override
 			public UserAccount save(UserAccount account) {
 				throw new UnsupportedOperationException();
 			}

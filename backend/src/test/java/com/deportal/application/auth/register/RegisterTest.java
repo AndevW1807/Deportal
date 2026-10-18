@@ -110,6 +110,11 @@ class RegisterTest {
 		}
 
 		@Override
+		public java.util.List<UserAccount> findActiveCustomers() {
+			return java.util.List.of();
+		}
+
+		@Override
 		public UserAccount save(UserAccount account) {
 			saved = account;
 			return new UserAccount(8L, account.name(), account.email(), account.passwordHash(), account.role(),

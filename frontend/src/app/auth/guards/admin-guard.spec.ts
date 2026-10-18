@@ -28,6 +28,7 @@ describe('adminGuard', () => {
       providers: [
         provideRouter([
           { path: '', component: Blank },
+          { path: 'app', component: Blank },
           { path: 'login', component: Blank },
           { path: 'admin/courts', component: Courts, canActivate: [adminGuard] },
         ]),
@@ -76,7 +77,7 @@ describe('adminGuard', () => {
     expect(router.url).toBe('/admin/courts');
   });
 
-  it('sends a customer back home', async () => {
+  it('sends a customer to the app', async () => {
     session.save('customer-token');
     const pending = router.navigateByUrl('/admin/courts');
     await nextTurn();
@@ -90,7 +91,7 @@ describe('adminGuard', () => {
     });
     await pending;
 
-    expect(router.url).toBe('/');
+    expect(router.url).toBe('/app');
     expect(session.token()).toBe('customer-token');
   });
 

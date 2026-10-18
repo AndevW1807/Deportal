@@ -3,9 +3,11 @@ package com.deportal.infrastructure.persistence.user;
 import java.util.List;
 import java.util.Optional;
 
+import com.deportal.domain.user.CustomerNotFound;
 import com.deportal.domain.user.EmailAlreadyUsed;
 import com.deportal.domain.user.UserAccount;
 import com.deportal.domain.user.UserRepository;
+import com.deportal.domain.user.UserRole;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
@@ -35,8 +37,22 @@ public class UserRepositoryAdapter implements UserRepository {
 	}
 
 	@Override
+	public List<UserAccount> findActiveCustomers() {
+		return users.findByRoleAndDeletedAtIsNullOrderByNameAsc(UserRole.CUSTOMER)
+			.stream()
+			.map(row -> toDomain(row))
+			.toList();
+	}
+
+	@Override
 	public UserAccount save(UserAccount account) {
 		try {
+			if (account.id() != null) {
+				UserJpaEntity existing = users.findByIdAndDeletedAtIsNull(account.id())
+					.orElseThrow(CustomerNotFound::new);
+				existing.changeMembership(account.type());
+				return toDomain(users.save(existing));
+			}
 			UserJpaEntity saved = users.save(UserJpaEntity.newAccount(account.name(), account.email(),
 					account.passwordHash(), account.role(), account.type()));
 			return toDomain(saved);

@@ -25,6 +25,7 @@ describe('Login', () => {
         provideRouter([
           { path: '', component: Blank },
           { path: 'login', component: Blank },
+          { path: 'app', component: Blank },
           { path: 'admin/courts', component: Blank },
         ]),
         provideHttpClient(withInterceptors([authInterceptor])),
@@ -103,7 +104,7 @@ describe('Login', () => {
     expect(localStorage.getItem('deportal.accessToken')).toBeNull();
   });
 
-  it('sends a customer back home for this browser session', async () => {
+  it('sends a customer to the app for this browser session', async () => {
     fillCredentials('ana@deportal.test', '123456');
     submitForm();
 
@@ -117,7 +118,7 @@ describe('Login', () => {
     await nextTurn();
     await fixture.whenStable();
 
-    expect(router.url).toBe('/');
+    expect(router.url).toBe('/app');
     expect(sessionStorage.getItem('deportal.accessToken')).toBe('customer-token');
     expect(localStorage.getItem('deportal.accessToken')).toBeNull();
   });

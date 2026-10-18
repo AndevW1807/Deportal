@@ -49,4 +49,8 @@ public final class UserAccount {
 		return deleted;
 	}
 
+	public UserAccount withMembership(MembershipType type) {
+		return new UserAccount(id, name, email, passwordHash, role, type, deleted);
+	}
+
 }

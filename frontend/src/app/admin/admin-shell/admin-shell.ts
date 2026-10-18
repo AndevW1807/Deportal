@@ -10,6 +10,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { catchError, filter, map, of } from 'rxjs';
 import { AuthService } from '../../auth/session/auth-service';
+import { AuthSession } from '../../auth/session/auth-session';
 import { SessionUser } from '../../auth/session/session.model';
 
 interface MenuItem {
@@ -22,6 +23,7 @@ interface MenuItem {
 const MENU: readonly MenuItem[] = [
   { label: 'Canchas', icon: 'stadium', link: '/admin/courts', roles: ['ADMIN'] },
   { label: 'Usuarios', icon: 'group', link: '/admin/users', roles: ['ADMIN'] },
+  { label: 'Reportes', icon: 'monitoring', link: '/admin/reports', roles: ['ADMIN'] },
 ];
 
 @Component({
@@ -47,6 +49,7 @@ const MENU: readonly MenuItem[] = [
 })
 export class AdminShell {
   private readonly auth = inject(AuthService);
+  private readonly session = inject(AuthSession);
   private readonly router = inject(Router);
   private readonly sessionUser = toSignal(this.auth.session().pipe(catchError(() => of(null))), {
     initialValue: undefined,
@@ -94,5 +97,10 @@ export class AdminShell {
     if (this.isNarrow()) {
       this.opened.set(false);
     }
+  }
+
+  protected signOut(): void {
+    this.session.clear();
+    void this.router.navigateByUrl('/login');
   }
 }

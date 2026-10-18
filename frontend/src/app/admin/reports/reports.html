@@ -1,0 +1,90 @@
+<section class="page">
+  <h1>Reportes</h1>
+  <p class="help">Utilización de las canchas en el período elegido.</p>
+
+  <form class="filters" (submit)="generate(); $event.preventDefault()">
+    <label>
+      Desde
+      <input type="date" [value]="draftFrom()" (input)="onFrom($event)" />
+    </label>
+    <label>
+      Hasta
+      <input type="date" [value]="draftTo()" (input)="onTo($event)" />
+    </label>
+    <label>
+      Deporte
+      <select [value]="draftSport()" (change)="onSport($event)">
+        <option value="">Todos</option>
+        @for (sport of sports(); track sport.code) {
+          <option [value]="sport.code">{{ sport.name }}</option>
+        }
+      </select>
+    </label>
+    <button type="submit">Generar reporte</button>
+  </form>
+  @if (rangeError()) {
+    <p class="range-error" role="alert">{{ rangeError() }}</p>
+  }
+
+  <div class="cards">
+    @for (card of cards(); track card.label) {
+      <article>
+        <p>{{ card.label }}</p>
+        <strong>{{ card.value }}</strong>
+      </article>
+    }
+  </div>
+
+  @if (loading()) {
+    <p class="status">Cargando reporte</p>
+  } @else {
+    <div class="charts">
+      <section>
+        <h2>Horas por cancha</h2>
+        <app-report-chart [option]="barOption()" label="Horas reservadas y disponibles por cancha" />
+      </section>
+      <section>
+        <h2>Reservaciones</h2>
+        @if (withoutReservations()) {
+          <p class="empty-chart">Sin reservaciones en el período</p>
+        } @else {
+          <app-report-chart [option]="donutOption()" label="Parte de las reservaciones de cada cancha" />
+        }
+      </section>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption class="sr-only">Utilización por cancha</caption>
+        <thead>
+          <tr>
+            <th scope="col">Cancha</th>
+            <th scope="col">Deporte</th>
+            <th scope="col">Reservaciones</th>
+            <th scope="col">Horas reservadas</th>
+            <th scope="col">Horas disponibles</th>
+            <th scope="col">Ocupación</th>
+            <th scope="col">Ingresos</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (court of report().courts; track court.id) {
+            <tr>
+              <th scope="row">{{ court.name }}</th>
+              <td>{{ court.sportName }}</td>
+              <td>{{ court.reservations }}</td>
+              <td>{{ formatHours(court.reservedHours) }}</td>
+              <td>{{ formatHours(court.availableHours) }}</td>
+              <td>{{ formatOccupancy(court.occupancyRate) }}</td>
+              <td>{{ formatIncome(court.income) }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7">Aún no hay canchas activas.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

@@ -1,0 +1,186 @@
+:host {
+  display: block;
+  min-height: 100%;
+  background: #fff;
+  color: #132018;
+  font-family: system-ui, sans-serif;
+}
+
+.page {
+  box-sizing: border-box;
+  padding: 1.75rem 2.25rem 2.5rem;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.8rem, 2vw, 2.2rem);
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  font-size: 1.05rem;
+}
+
+.help,
+.status,
+.empty-chart {
+  margin-top: 0.2rem;
+  color: #5d6b64;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.85rem;
+  margin-top: 1.15rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 11rem;
+  color: #3d4c45;
+  font-size: 0.92rem;
+  font-weight: 650;
+}
+
+input,
+select,
+button {
+  box-sizing: border-box;
+  height: 3.65rem;
+  border: 1px solid #d7e3dc;
+  border-radius: 0.85rem;
+  background: #f7faf8;
+  color: inherit;
+  font: inherit;
+}
+
+input,
+select {
+  padding: 0 0.8rem;
+}
+
+button {
+  padding: 0 1.1rem;
+  border-color: #0f6b3c;
+  background: #0f6b3c;
+  color: #fff;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0c5832;
+}
+
+.range-error {
+  margin-top: 0.7rem;
+  color: #9f1239;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 1.25rem;
+}
+
+article {
+  padding: 1rem 1.05rem;
+  border: 1px solid #d7e3dc;
+  border-radius: 1rem;
+  background: #fff;
+}
+
+article p {
+  color: #5d6b64;
+}
+
+article strong {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 1.45rem;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 0.85rem;
+  margin-top: 1.25rem;
+}
+
+.charts section,
+.table-wrap {
+  padding: 1rem;
+  border: 1px solid #d7e3dc;
+  border-radius: 1rem;
+}
+
+.empty-chart {
+  display: grid;
+  height: 18rem;
+  place-items: center;
+  text-align: center;
+}
+
+.table-wrap {
+  margin-top: 1.25rem;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.75rem 0.55rem;
+  border-bottom: 1px solid #e6eeea;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 1100px) {
+  .cards,
+  .charts {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 1rem 0.9rem 2rem;
+  }
+
+  .cards,
+  .charts,
+  label,
+  button {
+    width: 100%;
+  }
+
+  .cards,
+  .charts {
+    grid-template-columns: 1fr;
+  }
+}

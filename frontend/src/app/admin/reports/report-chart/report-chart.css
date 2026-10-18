@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+.plot {
+  width: 100%;
+  height: 20rem;
+}

@@ -3,7 +3,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
+import { AuthSession } from '../../auth/session/auth-session';
 import { of } from 'rxjs';
 import { authInterceptor } from '../../auth/session/auth-interceptor';
 import { AdminShell } from './admin-shell';
@@ -21,6 +22,7 @@ describe('AdminShell', () => {
       providers: [
         provideRouter([
           { path: 'app', component: Blank },
+          { path: 'login', component: Blank },
           { path: 'admin/courts', component: Blank },
         ]),
         provideHttpClient(withInterceptors([authInterceptor])),
@@ -58,10 +60,13 @@ describe('AdminShell', () => {
     expect(links[0].getAttribute('href')).toBe('/admin/courts');
     expect(links[1].textContent).toContain('Usuarios');
     expect(links[1].getAttribute('href')).toBe('/admin/users');
+    expect(links[2].textContent).toContain('Reportes');
+    expect(links[2].getAttribute('href')).toBe('/admin/reports');
     expect(profile.tagName).toBe('P');
     expect(profile.textContent).toContain('Admin');
     expect(fixture.nativeElement.querySelector('button.profile')).toBeNull();
     expect(fixture.nativeElement.querySelector('[aria-label="Abrir menú"]')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.logout').textContent).toContain('Cerrar sesión');
   });
 
   it('hides Canchas from a customer', async () => {
@@ -71,7 +76,21 @@ describe('AdminShell', () => {
     expect(fixture.nativeElement.querySelector('a[mat-list-item]')).toBeNull();
     expect(fixture.nativeElement.textContent).not.toContain('Canchas');
     expect(fixture.nativeElement.textContent).not.toContain('Usuarios');
+    expect(fixture.nativeElement.textContent).not.toContain('Reportes');
     expect(brand.getAttribute('href')).toBe('/app');
+    expect(fixture.nativeElement.querySelector('.logout').textContent).toContain('Cerrar sesión');
+  });
+
+  it('signs out and returns to login', async () => {
+    await setup(false);
+    const session = TestBed.inject(AuthSession);
+    session.save('token');
+
+    fixture.nativeElement.querySelector('.logout').click();
+    await fixture.whenStable();
+
+    expect(session.token()).toBeNull();
+    expect(TestBed.inject(Router).url).toBe('/login');
   });
 
   it('opens the menu from the toolbar and closes it from the backdrop', async () => {

@@ -39,6 +39,10 @@ export const routes: Routes = [
         path: 'users',
         loadComponent: () => import('./admin/users/users').then((module) => module.Users),
       },
+      {
+        path: 'reports',
+        loadComponent: () => import('./admin/reports/reports').then((module) => module.Reports),
+      },
     ],
   },
 ];

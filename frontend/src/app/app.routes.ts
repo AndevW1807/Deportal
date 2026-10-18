@@ -23,6 +23,13 @@ export const routes: Routes = [
     canActivate: [signedInGuard],
     loadComponent: () =>
       import('./admin/admin-shell/admin-shell').then((module) => module.AdminShell),
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'reserve' },
+      {
+        path: 'reserve',
+        loadComponent: () => import('./customer/reserve/reserve').then((module) => module.Reserve),
+      },
+    ],
   },
   {
     path: 'admin',

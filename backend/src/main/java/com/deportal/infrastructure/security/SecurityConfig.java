@@ -89,6 +89,7 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/register").permitAll()
 				.requestMatchers("/api/admin/**").hasRole("ADMIN")
+				.requestMatchers("/api/reservations/**").hasRole("CUSTOMER")
 				.anyRequest().authenticated())
 			.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
 				.authenticationEntryPoint(entryPoint))

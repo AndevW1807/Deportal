@@ -24,6 +24,7 @@ const MENU: readonly MenuItem[] = [
   { label: 'Canchas', icon: 'stadium', link: '/admin/courts', roles: ['ADMIN'] },
   { label: 'Usuarios', icon: 'group', link: '/admin/users', roles: ['ADMIN'] },
   { label: 'Reportes', icon: 'monitoring', link: '/admin/reports', roles: ['ADMIN'] },
+  { label: 'Reservar cancha', icon: 'event_available', link: '/app/reserve', roles: ['CUSTOMER'] },
 ];
 
 @Component({
@@ -79,7 +80,7 @@ export class AdminShell {
     () => this.menu().find((item) => this.path().startsWith(item.link))?.label ?? '',
   );
   protected readonly homeLink = computed(() =>
-    this.sessionUser()?.role === 'ADMIN' ? '/admin/courts' : '/app',
+    this.sessionUser()?.role === 'ADMIN' ? '/admin/courts' : '/app/reserve',
   );
 
   constructor() {

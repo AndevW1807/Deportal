@@ -10,7 +10,7 @@ public record CourtResponse(Long id, String name, SportTypeResponse sportType, i
 
 	private static final DateTimeFormatter HOUR = DateTimeFormatter.ofPattern("HH:mm");
 
-	static CourtResponse from(CourtDetails details) {
+	public static CourtResponse from(CourtDetails details) {
 		Court court = details.court();
 		return new CourtResponse(court.id(), court.name(),
 				new SportTypeResponse(details.sportType().code(), details.sportType().name()), court.capacity(),

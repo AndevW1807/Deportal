@@ -27,7 +27,10 @@ final class ProblemAccessDeniedHandler implements AccessDeniedHandler {
 		response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
 		ProblemDetail problem = ProblemDetail.forStatus(HttpServletResponse.SC_FORBIDDEN);
 		problem.setTitle("Forbidden");
-		problem.setDetail("Admin access required");
+		String detail = request.getRequestURI() != null && request.getRequestURI().startsWith("/api/reservations")
+				? "Customer access required"
+				: "Admin access required";
+		problem.setDetail(detail);
 		objectMapper.writeValue(response.getOutputStream(), problem);
 	}
 

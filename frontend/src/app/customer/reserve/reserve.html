@@ -1,0 +1,214 @@
+<section class="page">
+  <h1>Reservar cancha</h1>
+  <p class="help">Elige la cancha, el horario y confirma. La membresía se toma de tu cuenta.</p>
+
+  <ol class="steps">
+    @for (label of steps; track label; let index = $index) {
+      <li [class.done]="index < step()">
+        <button
+          type="button"
+          [attr.aria-current]="step() === index ? 'step' : null"
+          [disabled]="index > step()"
+          (click)="goTo(index)"
+        >
+          <span>{{ index + 1 }}</span>
+          {{ label }}
+        </button>
+      </li>
+    }
+  </ol>
+
+  @if (step() === 0) {
+    <div class="toolbar">
+      <div class="filters">
+        <label class="search">
+          <mat-icon aria-hidden="true">search</mat-icon>
+          <input
+            aria-label="Buscar por nombre"
+            placeholder="Buscar por nombre"
+            [value]="query()"
+            (input)="onQuery($event)"
+          />
+        </label>
+        <label class="sport-filter">
+          Deporte
+          <select aria-label="Filtrar por deporte" [value]="sport()" (change)="onSport($event)">
+            <option value="">Todos</option>
+            @for (item of sports(); track item.code) {
+              <option [value]="item.code">{{ item.name }}</option>
+            }
+          </select>
+        </label>
+      </div>
+      @if (query() || sport()) {
+        <button type="button" class="text" (click)="clearFilters()">Limpiar filtros</button>
+      }
+    </div>
+
+    @if (visibleCourts().length === 0) {
+      <p class="empty">
+        {{ courts().length === 0 ? 'Aún no hay canchas disponibles.' : 'Ninguna cancha coincide con la búsqueda.' }}
+      </p>
+    } @else {
+      <div class="cards">
+        @for (item of visibleCourts(); track item.id) {
+          <button
+            type="button"
+            class="card"
+            [class.selected]="courtId() === item.id"
+            [attr.aria-pressed]="courtId() === item.id"
+            (click)="chooseCourt(item)"
+          >
+            <span class="band" [style.background]="sportLook(item.sportType).tint" [style.color]="sportLook(item.sportType).ink">
+              <mat-icon aria-hidden="true">{{ sportLook(item.sportType).icon }}</mat-icon>
+              {{ item.sportType.name }}
+            </span>
+            <span class="body">
+              <strong>{{ item.name }}</strong>
+              <span>{{ capacityLabel(item.capacity) }}</span>
+              <span>{{ item.opensAt }} – {{ item.closesAt }}</span>
+              <span class="rate">{{ formatRate(item.hourlyRate) }}</span>
+            </span>
+          </button>
+        }
+      </div>
+    }
+
+    <div class="actions">
+      <button type="button" class="primary" [disabled]="court() === null" (click)="continueFromCourt()">
+        Continuar
+      </button>
+    </div>
+  }
+
+  @if (step() === 1 && court(); as selected) {
+    <div class="schedule">
+      <div class="calendar">
+        <div class="month">
+          <button type="button" aria-label="Mes anterior" [disabled]="!canGoBack()" (click)="previousMonth()">
+            <mat-icon aria-hidden="true">chevron_left</mat-icon>
+          </button>
+          <strong>{{ monthLabel() }}</strong>
+          <button type="button" aria-label="Mes siguiente" (click)="nextMonth()">
+            <mat-icon aria-hidden="true">chevron_right</mat-icon>
+          </button>
+        </div>
+        <div class="weekdays" aria-hidden="true">
+          @for (weekday of weekdays; track weekday) {
+            <span>{{ weekday }}</span>
+          }
+        </div>
+        <div class="grid" role="group" aria-label="Calendario">
+          @for (cell of days(); track $index) {
+            @if (cell) {
+              <button
+                type="button"
+                [disabled]="past(cell.iso)"
+                [class.selected]="date() === cell.iso"
+                [attr.aria-pressed]="date() === cell.iso"
+                [attr.aria-label]="formatDay(cell.iso)"
+                (click)="chooseDate(cell.iso)"
+              >
+                {{ cell.day }}
+              </button>
+            } @else {
+              <span></span>
+            }
+          }
+        </div>
+      </div>
+
+      <div class="hours">
+        <div class="hours-head">
+          <h2>Hora de inicio</h2>
+          <label class="sport-filter duration">
+            Duración
+            <select aria-label="Duración" [value]="duration()" (change)="onDuration($event)">
+              @for (hours of durations; track hours) {
+                <option [value]="hours">{{ hours === 1 ? '1 hora' : hours + ' horas' }}</option>
+              }
+            </select>
+          </label>
+        </div>
+        <p class="note">Entre una reserva y la siguiente se deja 1 hora de limpieza.</p>
+        @if (sameDayWait()) {
+          <p class="note">Si eliges un horario ocupado, quedas en lista de espera. Los miembros tienen prioridad.</p>
+        }
+        @if (slots().length === 0) {
+          <p class="empty">No hay horarios disponibles para esa duración.</p>
+        } @else {
+          <div class="starts" role="group" aria-label="Hora de inicio">
+            @for (slot of slots(); track slot.startsAt) {
+              <button
+                type="button"
+                [disabled]="!selectable(slot)"
+                [class.selected]="start() === slot.startsAt"
+                [class.occupied]="slot.state === 'OCCUPIED'"
+                [attr.aria-pressed]="start() === slot.startsAt"
+                (click)="chooseStart(slot)"
+              >
+                {{ slot.startsAt }}
+                @if (slot.state === 'OCCUPIED') {
+                  <small>Ocupada</small>
+                }
+                @if (slot.state === 'BLOCKED') {
+                  <small>Limpieza</small>
+                }
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="text" (click)="back()">Atrás</button>
+      <button type="button" class="primary" [disabled]="start() === null" (click)="continueFromSchedule()">
+        Continuar
+      </button>
+    </div>
+  }
+
+  @if (step() === 2 && court(); as selected) {
+    <div class="bill">
+      @if (quote(); as price) {
+        <article class="invoice">
+          <header>
+            <h2>{{ selected.name }}</h2>
+            <p>{{ formatDay(date()) }}</p>
+            <p>
+              {{ start() }} – {{ price.endsAt }} ·
+              {{ duration() === 1 ? '1 hora' : duration() + ' horas' }}
+            </p>
+          </header>
+          <dl>
+            <div>
+              <dt>
+                Tarifa
+                <span>{{ formatRate(selected.hourlyRate) }} · {{ duration() === 1 ? '1 hora' : duration() + ' horas' }}</span>
+              </dt>
+              <dd>{{ formatCop(price.subtotal) }}</dd>
+            </div>
+            <div>
+              <dt>Descuento de miembro</dt>
+              <dd>{{ formatCop(price.memberDiscount) }}</dd>
+            </div>
+            <div>
+              <dt>Fuera de hora pico</dt>
+              <dd>{{ formatCop(price.offPeakDiscount) }}</dd>
+            </div>
+            <div class="total">
+              <dt>Total</dt>
+              <dd>{{ formatCop(price.total) }}</dd>
+            </div>
+          </dl>
+        </article>
+      }
+
+      <div class="actions">
+        <button type="button" class="text" (click)="back()">Atrás</button>
+        <button type="button" class="primary" [disabled]="busy()" (click)="reserve()">Reservar</button>
+      </div>
+    </div>
+  }
+</section>

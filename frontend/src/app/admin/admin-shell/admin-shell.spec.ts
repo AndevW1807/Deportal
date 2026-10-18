@@ -22,6 +22,7 @@ describe('AdminShell', () => {
       providers: [
         provideRouter([
           { path: 'app', component: Blank },
+          { path: 'app/reserve', component: Blank },
           { path: 'login', component: Blank },
           { path: 'admin/courts', component: Blank },
         ]),
@@ -67,17 +68,22 @@ describe('AdminShell', () => {
     expect(fixture.nativeElement.querySelector('button.profile')).toBeNull();
     expect(fixture.nativeElement.querySelector('[aria-label="Abrir menú"]')).toBeNull();
     expect(fixture.nativeElement.querySelector('.logout').textContent).toContain('Cerrar sesión');
+    expect(fixture.nativeElement.textContent).not.toContain('Reservar cancha');
   });
 
-  it('hides Canchas from a customer', async () => {
+  it('shows Reservar cancha to a customer', async () => {
     await setup(false, 'CUSTOMER');
+    const links: NodeListOf<HTMLAnchorElement> =
+      fixture.nativeElement.querySelectorAll('a[mat-list-item]');
     const brand: HTMLAnchorElement = fixture.nativeElement.querySelector('a.brand');
 
-    expect(fixture.nativeElement.querySelector('a[mat-list-item]')).toBeNull();
+    expect(links).toHaveLength(1);
+    expect(links[0].textContent).toContain('Reservar cancha');
+    expect(links[0].getAttribute('href')).toBe('/app/reserve');
     expect(fixture.nativeElement.textContent).not.toContain('Canchas');
     expect(fixture.nativeElement.textContent).not.toContain('Usuarios');
     expect(fixture.nativeElement.textContent).not.toContain('Reportes');
-    expect(brand.getAttribute('href')).toBe('/app');
+    expect(brand.getAttribute('href')).toBe('/app/reserve');
     expect(fixture.nativeElement.querySelector('.logout').textContent).toContain('Cerrar sesión');
   });
 

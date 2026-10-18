@@ -1,0 +1,496 @@
+:host {
+  display: block;
+  min-height: 100%;
+  background: #fff;
+  color: #132018;
+  font-family: system-ui, sans-serif;
+}
+
+.page {
+  box-sizing: border-box;
+  padding: 1.75rem 2.25rem 2.5rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 2vw, 2.2rem);
+  letter-spacing: -0.03em;
+}
+
+.help,
+.note,
+.empty,
+dd,
+.card .body span {
+  color: #5d6b64;
+}
+
+.help {
+  margin: 0.35rem 0 0;
+}
+
+.steps {
+  display: flex;
+  align-items: center;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.steps li:not(:last-child) {
+  flex: 1;
+}
+
+.steps li:not(:last-child)::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  min-width: 1.25rem;
+  margin-inline: 0.75rem;
+  background: #d7e3dc;
+}
+
+.steps li.done:not(:last-child)::after {
+  background: #0f6b3c;
+}
+
+.steps button {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 0;
+  background: transparent;
+  color: #5d6b64;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.steps button[aria-current='step'] {
+  color: #0f6b3c;
+}
+
+.steps button:disabled {
+  color: #8ea099;
+  cursor: default;
+}
+
+.steps span {
+  display: grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  border-radius: 999px;
+  background: #e7f6ec;
+  color: #0f6b3c;
+  font-weight: 700;
+}
+
+.steps button[aria-current='step'] span {
+  background: #0f6b3c;
+  color: #fff;
+}
+
+.steps button:disabled span {
+  background: #eef2f0;
+  color: #8ea099;
+}
+
+.toolbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.filters {
+  display: flex;
+  gap: 0.75rem;
+  width: min(100%, 42rem);
+}
+
+.search,
+.sport-filter,
+.card,
+.calendar,
+.hours {
+  border: 1px solid #d7e3dc;
+  border-radius: 0.85rem;
+  background: #f7faf8;
+}
+
+.search,
+.sport-filter {
+  display: flex;
+  box-sizing: border-box;
+  height: 3.65rem;
+}
+
+.search {
+  flex: 1;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 0 0.8rem;
+}
+
+.search input,
+.sport-filter select {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #132018;
+  font: inherit;
+}
+
+.sport-filter {
+  flex: 0 0 12rem;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0.4rem 0.8rem;
+  color: #5d6b64;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.sport-filter select {
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.cards,
+.starts {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.cards {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1.15rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.card.selected {
+  outline: 2px solid #0f6b3c;
+}
+
+.band {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 3.2rem;
+  padding: 0.75rem 0.9rem;
+  font-weight: 750;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.9rem;
+}
+
+.body strong,
+.rate {
+  color: #132018;
+}
+
+.rate {
+  font-weight: 750;
+}
+
+.schedule {
+  display: grid;
+  grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.calendar,
+.hours {
+  padding: 1rem;
+}
+
+.month,
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.month button,
+.starts button,
+.actions button,
+.text {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.25rem;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.grid button {
+  height: 2.4rem;
+  border: 0;
+  border-radius: 0.6rem;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.grid button.selected {
+  background: #0f6b3c;
+  color: #fff;
+}
+
+.grid button:disabled,
+.starts button:disabled,
+.actions button:disabled {
+  color: #8ea099;
+  cursor: default;
+}
+
+.hours {
+  min-width: 0;
+}
+
+.hours-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.hours h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: normal;
+}
+
+.duration {
+  width: 12rem;
+  flex: none;
+  background: #fff;
+}
+
+.note,
+.empty {
+  margin: 0.8rem 0 0;
+}
+
+.starts {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 0.9rem;
+}
+
+.starts button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+  border: 1px solid #d7e3dc;
+  border-radius: 0.75rem;
+  background: #fff;
+  font-weight: 650;
+}
+
+.starts button.selected {
+  border-color: #0f6b3c;
+  background: #0f6b3c;
+  color: #fff;
+}
+
+.starts button.selected small {
+  color: #fff;
+}
+
+.starts button small {
+  color: #5d6b64;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.bill {
+  margin-top: 1.25rem;
+}
+
+.invoice {
+  border: 1px solid #d7e3dc;
+  border-radius: 0.85rem;
+  background: #fff;
+  padding: 1.5rem 1.75rem 0.4rem;
+}
+
+.invoice h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 750;
+  letter-spacing: normal;
+}
+
+.invoice header p {
+  margin: 0.25rem 0 0;
+  color: #5d6b64;
+  font-size: 1.05rem;
+}
+
+.invoice dl {
+  margin: 1.15rem 0 0;
+}
+
+.invoice dl div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid #e6eeea;
+  font-size: 1.05rem;
+}
+
+.invoice dt span {
+  display: block;
+  margin-top: 0.15rem;
+  color: #5d6b64;
+  font-weight: 500;
+}
+
+.invoice dd {
+  margin: 0;
+  color: #132018;
+  font-weight: 650;
+}
+
+.invoice dl div.total {
+  margin: 0.2rem -1.75rem 0;
+  padding: 1.05rem 1.75rem 1.15rem;
+  border-top: 1px solid #d7e3dc;
+}
+
+.invoice .total dt,
+.invoice .total dd {
+  color: #0f6b3c;
+  font-size: 1.45rem;
+  font-weight: 750;
+}
+
+.bill .actions {
+  margin-top: 1rem;
+}
+
+.actions {
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}
+
+.actions .primary {
+  min-height: 2.75rem;
+  padding: 0 1.2rem;
+  border: 0;
+  border-radius: 0.8rem;
+  background: #0f6b3c;
+  color: #fff;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.actions .primary:disabled {
+  background: #c5d5cc;
+  color: #fff;
+  cursor: default;
+}
+
+@media (max-width: 1100px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 1rem 0.9rem 2rem;
+  }
+
+  .toolbar,
+  .filters,
+  .schedule {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .steps {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .steps li,
+  .steps li:not(:last-child) {
+    flex: none;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .steps li:not(:last-child)::after {
+    flex: none;
+    width: 2px;
+    height: 1.25rem;
+    min-width: 0;
+    margin: 0.35rem 0 0.35rem 0.8rem;
+  }
+
+  .filters,
+  .search,
+  .sport-filter {
+    width: 100%;
+    flex: none;
+  }
+
+  .cards,
+  .schedule {
+    grid-template-columns: 1fr;
+  }
+
+  .starts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .hours-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hours .duration {
+    width: 100%;
+  }
+}

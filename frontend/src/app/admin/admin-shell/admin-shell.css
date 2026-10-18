@@ -1,0 +1,66 @@
+:host {
+  display: block;
+  height: 100svh;
+}
+
+.shell {
+  height: 100%;
+  background: #fff;
+}
+
+mat-sidenav {
+  width: 16.5rem;
+  background: #07111c;
+  color: #f4f7f5;
+}
+
+.brand {
+  display: block;
+  line-height: 0;
+  text-decoration: none;
+}
+
+mat-sidenav .brand {
+  padding: 1.15rem 1rem 0.35rem;
+}
+
+.brand img {
+  display: block;
+  width: auto;
+  height: 2.45rem;
+}
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: #fff;
+}
+
+mat-toolbar {
+  background: #07111c;
+  color: #f4f7f5;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 0 auto;
+  font-weight: 600;
+}
+
+.content {
+  flex: 1;
+  background: #fff;
+  color: #132018;
+  color-scheme: light;
+}
+
+@media (max-width: 1100px) {
+  mat-toolbar {
+    height: auto;
+    min-height: 4rem;
+    padding-top: calc(0.35rem + env(safe-area-inset-top, 0px));
+  }
+}

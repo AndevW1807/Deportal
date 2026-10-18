@@ -1,0 +1,175 @@
+:host {
+  display: block;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+}
+
+.community {
+  position: relative;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1.05fr minmax(0, 1.15fr) minmax(12rem, 0.8fr);
+  align-items: center;
+  min-height: 0;
+  overflow: hidden;
+  background: #07140f;
+}
+
+img {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 48%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 72% center;
+  mask-image: linear-gradient(90deg, #000 18%, transparent 68%);
+  pointer-events: none;
+}
+
+.copy {
+  position: relative;
+  z-index: 1;
+  grid-column: 2;
+  padding: 0.85rem 1rem;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+  color: rgb(255 255 255 / 78%);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 1.6rem;
+  height: 2px;
+  background: #2fdf78;
+}
+
+h2 {
+  margin: 0.55rem 0 0;
+  font-size: clamp(1.55rem, 2.1vw, 2.05rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+h2 span {
+  display: block;
+  color: #2fdf78;
+}
+
+.lead {
+  max-width: 28rem;
+  margin: 0.5rem 0 0;
+  color: rgb(255 255 255 / 78%);
+  font-size: 0.98rem;
+  line-height: 1.45;
+}
+
+.copy a {
+  display: inline-block;
+  box-sizing: border-box;
+  margin-top: 0.8rem;
+  padding: 0.8rem 1.35rem;
+  border: 0;
+  border-radius: 0.55rem;
+  background: #2fdf78;
+  color: #07140f;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.copy a:focus-visible {
+  outline: 2px solid #2fdf78;
+  outline-offset: 3px;
+}
+
+.perks {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  grid-column: 3;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 1rem 0.5rem 1rem 0;
+  list-style: none;
+}
+
+.perks li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgb(255 255 255 / 90%);
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+
+svg {
+  flex: none;
+  width: 1.7rem;
+  height: 1.7rem;
+  color: #2fdf78;
+}
+
+@media (max-width: 1100px) {
+  :host {
+    width: 100%;
+  }
+
+  .community {
+    display: block;
+    min-height: 0;
+    padding: 1.85rem 1.25rem 1.5rem;
+  }
+
+  img {
+    width: 100%;
+    object-position: 68% center;
+    mask-image: none;
+  }
+
+  .community::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(7 17 28 / 62%), rgb(7 17 28 / 86%));
+  }
+
+  .copy {
+    padding: 0;
+  }
+
+  .copy a {
+    width: 100%;
+  }
+
+  .perks {
+    display: none;
+  }
+}
+
+@media (min-width: 1101px) {
+  :host {
+    width: 100%;
+  }
+
+  .community {
+    padding-right: 2.5rem;
+  }
+
+  .perks {
+    padding-block: 0.85rem;
+  }
+}

@@ -1,0 +1,60 @@
+<div class="toolbar">
+  <div class="filters">
+    <label class="search">
+      <mat-icon aria-hidden="true">search</mat-icon>
+      <input
+        aria-label="Buscar por nombre"
+        placeholder="Buscar por nombre"
+        [value]="query()"
+        (input)="onQuery($event)"
+      />
+    </label>
+    <label class="sport-filter">
+      Deporte
+      <select aria-label="Filtrar por deporte" [value]="sport()" (change)="onSport($event)">
+        <option value="">Todos</option>
+        @for (item of sports(); track item.code) {
+          <option [value]="item.code">{{ item.name }}</option>
+        }
+      </select>
+    </label>
+  </div>
+  @if (query() || sport()) {
+    <button type="button" class="text" (click)="filtersCleared.emit()">Limpiar filtros</button>
+  }
+</div>
+
+@if (visibleCourts().length === 0) {
+  <p class="empty">
+    {{ courts().length === 0 ? 'Aún no hay canchas disponibles.' : 'Ninguna cancha coincide con la búsqueda.' }}
+  </p>
+} @else {
+  <div class="cards">
+    @for (item of visibleCourts(); track item.id) {
+      <button
+        type="button"
+        class="card"
+        [class.selected]="selectedId() === item.id"
+        [attr.aria-pressed]="selectedId() === item.id"
+        (click)="courtChosen.emit(item)"
+      >
+        <span class="band" [style.background]="sportLook(item.sportType).tint" [style.color]="sportLook(item.sportType).ink">
+          <mat-icon aria-hidden="true">{{ sportLook(item.sportType).icon }}</mat-icon>
+          {{ item.sportType.name }}
+        </span>
+        <span class="body">
+          <strong>{{ item.name }}</strong>
+          <span>{{ capacityLabel(item.capacity) }}</span>
+          <span>{{ item.opensAt }} – {{ item.closesAt }}</span>
+          <span class="rate">{{ formatRate(item.hourlyRate) }}</span>
+        </span>
+      </button>
+    }
+  </div>
+}
+
+<div class="actions">
+  <button type="button" class="primary" [disabled]="selectedId() === null" (click)="continued.emit()">
+    Continuar
+  </button>
+</div>

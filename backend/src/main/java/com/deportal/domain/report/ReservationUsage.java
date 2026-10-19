@@ -1,4 +1,4 @@
-package com.deportal.domain.court;
+package com.deportal.domain.report;
 
 import java.time.LocalDate;
 import java.util.List;

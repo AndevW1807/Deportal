@@ -3,7 +3,6 @@ package com.deportal.application.reservation;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.List;
 
 import com.deportal.domain.court.Court;
@@ -15,8 +14,6 @@ import com.deportal.domain.reservation.ReservationRepository;
 import com.deportal.domain.reservation.failure.InvalidReservation;
 
 public final class ListAvailability {
-
-	public static final ZoneId BOGOTA = ZoneId.of("America/Bogota");
 
 	private final CourtRepository courts;
 	private final ReservationRepository reservations;
@@ -30,16 +27,16 @@ public final class ListAvailability {
 
 	public List<AvailableStart> execute(Long courtId, LocalDate date, int durationHours) {
 		Court court = courts.findActiveById(courtId).orElseThrow(CourtNotFound::new);
-		if (date == null || date.isBefore(LocalDate.now(clock.withZone(BOGOTA)))
-				|| !CourtWindow.durationIsValid(durationHours)) {
+		LocalDate today = ReservationTime.today(clock);
+		if (date == null || date.isBefore(today) || !CourtWindow.durationIsValid(durationHours)) {
 			throw new InvalidReservation();
 		}
 		List<Reservation> confirmed = reservations.findConfirmed(courtId, date);
-		LocalTime now = LocalTime.now(clock.withZone(BOGOTA));
-		boolean today = date.equals(LocalDate.now(clock.withZone(BOGOTA)));
+		LocalTime now = ReservationTime.now(clock);
+		boolean sameDay = date.equals(today);
 		return CourtWindow.starts(court.opensAt(), court.closesAt(), durationHours)
 			.stream()
-			.filter(start -> !today || start.isAfter(now))
+			.filter(start -> !sameDay || start.isAfter(now))
 			.map(start -> AvailableStart.classify(start, durationHours, confirmed))
 			.toList();
 	}

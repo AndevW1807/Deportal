@@ -3,8 +3,8 @@ package com.deportal.infrastructure.persistence.user;
 import java.util.List;
 import java.util.Optional;
 
-import com.deportal.domain.user.CustomerNotFound;
-import com.deportal.domain.user.EmailAlreadyUsed;
+import com.deportal.domain.user.failure.CustomerNotFound;
+import com.deportal.domain.user.failure.EmailAlreadyUsed;
 import com.deportal.domain.user.UserAccount;
 import com.deportal.domain.user.UserRepository;
 import com.deportal.domain.user.UserRole;

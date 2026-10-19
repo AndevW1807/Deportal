@@ -1,16 +1,22 @@
 package com.deportal.application.reservation;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Clock;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.deportal.domain.court.CourtRepository;
+import com.deportal.domain.reservation.RefundPolicy;
 import com.deportal.domain.reservation.Reservation;
 import com.deportal.domain.reservation.ReservationRepository;
 import com.deportal.domain.reservation.ReservationStatus;
 import com.deportal.domain.reservation.ScheduleConflict;
 import com.deportal.domain.reservation.WaitlistPriority;
+import com.deportal.domain.reservation.failure.InvalidReservation;
 import com.deportal.domain.reservation.failure.ReservationNotFound;
 import com.deportal.domain.user.MembershipType;
 import com.deportal.domain.user.UserRepository;
@@ -20,18 +26,23 @@ public final class CancelReservation {
 	private final ReservationRepository reservations;
 	private final CourtRepository courts;
 	private final UserRepository users;
+	private final Clock clock;
 
-	public CancelReservation(ReservationRepository reservations, CourtRepository courts, UserRepository users) {
+	public CancelReservation(ReservationRepository reservations, CourtRepository courts, UserRepository users,
+			Clock clock) {
 		this.reservations = reservations;
 		this.courts = courts;
 		this.users = users;
+		this.clock = clock;
 	}
 
 	public ReservationDetails execute(Long customerId, Long reservationId) {
 		Reservation current = reservations.findActiveById(reservationId)
 			.filter(reservation -> reservation.customerId().equals(customerId))
 			.orElseThrow(ReservationNotFound::new);
-		Reservation cancelled = current.withStatus(ReservationStatus.CANCELLED);
+		Duration untilStart = ReservationTime.untilStart(current, clock);
+		BigDecimal refund = refundFor(current, untilStart);
+		Reservation cancelled = current.withCancellation(refund);
 		if (current.status() != ReservationStatus.CONFIRMED) {
 			return details(reservations.save(cancelled));
 		}
@@ -69,6 +80,16 @@ public final class CancelReservation {
 	private ReservationDetails details(Reservation reservation) {
 		String courtName = courts.findActiveById(reservation.courtId()).map(court -> court.name()).orElse("Cancha");
 		return new ReservationDetails(reservation, courtName);
+	}
+
+	private static BigDecimal refundFor(Reservation reservation, Duration untilStart) {
+		if (untilStart.isZero() || untilStart.isNegative()) {
+			throw new InvalidReservation();
+		}
+		if (reservation.status() == ReservationStatus.WAITING) {
+			return BigDecimal.ZERO.setScale(2, RoundingMode.UNNECESSARY);
+		}
+		return RefundPolicy.amount(reservation.total(), untilStart);
 	}
 
 	private static boolean fits(Reservation waiting, List<Reservation> confirmed) {

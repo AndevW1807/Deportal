@@ -1,6 +1,7 @@
 package com.deportal.infrastructure.web.reservation;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.deportal.application.auth.failure.InvalidCredentials;
@@ -9,6 +10,7 @@ import com.deportal.application.reservation.CancelReservation;
 import com.deportal.application.reservation.CreateReservation;
 import com.deportal.application.reservation.ListAvailability;
 import com.deportal.application.reservation.ListMyReservations;
+import com.deportal.application.reservation.QuoteReservation;
 import com.deportal.infrastructure.web.court.CourtResponse;
 
 import jakarta.validation.Valid;
@@ -36,14 +38,17 @@ public class ReservationController {
 	private final ListMyReservations listMyReservations;
 	private final CancelReservation cancelReservation;
 
+	private final QuoteReservation quoteReservation;
+
 	public ReservationController(ListCourts listCourts, ListAvailability listAvailability,
 			CreateReservation createReservation, ListMyReservations listMyReservations,
-			CancelReservation cancelReservation) {
+			CancelReservation cancelReservation, QuoteReservation quoteReservation) {
 		this.listCourts = listCourts;
 		this.listAvailability = listAvailability;
 		this.createReservation = createReservation;
 		this.listMyReservations = listMyReservations;
 		this.cancelReservation = cancelReservation;
+		this.quoteReservation = quoteReservation;
 	}
 
 	@GetMapping("/courts")
@@ -55,6 +60,13 @@ public class ReservationController {
 	public List<AvailableStartResponse> availability(@RequestParam Long courtId, @RequestParam LocalDate date,
 			@RequestParam int durationHours) {
 		return listAvailability.execute(courtId, date, durationHours).stream().map(AvailableStartResponse::from).toList();
+	}
+
+	@GetMapping("/quote")
+	public QuoteResponse quote(@AuthenticationPrincipal Jwt jwt, @RequestParam Long courtId,
+			@RequestParam LocalTime startsAt, @RequestParam int durationHours) {
+		return QuoteResponse.from(quoteReservation.execute(customerId(jwt), courtId, startsAt, durationHours), startsAt,
+				durationHours);
 	}
 
 	@PostMapping

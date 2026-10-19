@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { isRecord } from '../../shared/http/parse';
 import { Customer, Membership } from './user.model';
 
 @Service()
@@ -40,8 +41,4 @@ export function parseCustomer(body: unknown): Customer {
 
 function isMembership(value: unknown): value is Membership {
   return value === 'MEMBER' || value === 'NON_MEMBER';
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
 }

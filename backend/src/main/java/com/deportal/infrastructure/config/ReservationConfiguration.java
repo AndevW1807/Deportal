@@ -6,6 +6,7 @@ import com.deportal.application.reservation.CancelReservation;
 import com.deportal.application.reservation.CreateReservation;
 import com.deportal.application.reservation.ListAvailability;
 import com.deportal.application.reservation.ListMyReservations;
+import com.deportal.application.reservation.QuoteReservation;
 import com.deportal.domain.court.CourtRepository;
 import com.deportal.domain.reservation.ReservationRepository;
 import com.deportal.domain.user.UserRepository;
@@ -28,13 +29,19 @@ public class ReservationConfiguration {
 	}
 
 	@Bean
-	ListMyReservations listMyReservations(ReservationRepository reservations, CourtRepository courts) {
-		return new ListMyReservations(reservations, courts);
+	QuoteReservation quoteReservation(CourtRepository courts, UserRepository users) {
+		return new QuoteReservation(courts, users);
 	}
 
 	@Bean
-	CancelReservation cancelReservation(ReservationRepository reservations, CourtRepository courts, UserRepository users) {
-		return new CancelReservation(reservations, courts, users);
+	ListMyReservations listMyReservations(ReservationRepository reservations, CourtRepository courts, Clock clock) {
+		return new ListMyReservations(reservations, courts, clock);
+	}
+
+	@Bean
+	CancelReservation cancelReservation(ReservationRepository reservations, CourtRepository courts, UserRepository users,
+			Clock clock) {
+		return new CancelReservation(reservations, courts, users, clock);
 	}
 
 }

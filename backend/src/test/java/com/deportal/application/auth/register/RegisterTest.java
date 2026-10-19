@@ -6,7 +6,7 @@ import com.deportal.application.auth.AuthenticatedUser;
 import com.deportal.application.auth.failure.InvalidRegistration;
 import com.deportal.application.auth.failure.PasswordTooLong;
 import com.deportal.application.auth.port.PasswordHasher;
-import com.deportal.domain.user.EmailAlreadyUsed;
+import com.deportal.domain.user.failure.EmailAlreadyUsed;
 import com.deportal.domain.user.MembershipType;
 import com.deportal.domain.user.UserAccount;
 import com.deportal.domain.user.UserRepository;

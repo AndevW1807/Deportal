@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Notice } from './auth/notice/notice';
+import { Notice } from './shared/notice/notice';
 
 @Component({
   imports: [RouterOutlet],

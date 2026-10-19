@@ -1,6 +1,6 @@
 package com.deportal.infrastructure.web.user;
 
-import com.deportal.domain.user.CustomerNotFound;
+import com.deportal.domain.user.failure.CustomerNotFound;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;

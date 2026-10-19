@@ -24,4 +24,7 @@ public interface ReservationJpaRepository extends Repository<ReservationJpaEntit
 	List<ReservationJpaEntity> findByUserIdAndStatusInAndDeletedAtIsNullOrderByReservationDateAscStartsAtAsc(
 			Long userId, Collection<ReservationStatus> statuses);
 
+	List<ReservationJpaEntity> findByStatusAndDeletedAtIsNullAndReservationDateBetween(ReservationStatus status,
+			LocalDate from, LocalDate to);
+
 }

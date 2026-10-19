@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { Notice } from './auth/notice/notice';
+import { Notice } from './shared/notice/notice';
 
 import { App } from './app';
 

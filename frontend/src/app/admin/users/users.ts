@@ -3,7 +3,7 @@ import { Component, computed, effect, inject, linkedSignal, signal } from '@angu
 import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { firstValueFrom } from 'rxjs';
-import { Notice } from '../../auth/notice/notice';
+import { Notice } from '../../shared/notice/notice';
 import { parseCustomers, UserService } from './user-service';
 import { Customer } from './user.model';
 
@@ -11,7 +11,7 @@ import { Customer } from './user.model';
   selector: 'app-users',
   imports: [MatIcon, MatSlideToggle],
   templateUrl: './users.html',
-  styleUrl: './users.css',
+  styleUrls: ['../../shared/page/page.css', './users.css'],
 })
 export class Users {
   private readonly users = inject(UserService);

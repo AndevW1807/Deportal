@@ -13,6 +13,8 @@ import com.deportal.application.reservation.CancelReservation;
 import com.deportal.application.reservation.CreateReservation;
 import com.deportal.application.reservation.ListAvailability;
 import com.deportal.application.reservation.ListMyReservations;
+import com.deportal.application.reservation.QuoteReservation;
+import com.deportal.domain.reservation.PriceQuote;
 import com.deportal.application.reservation.ReservationDetails;
 import com.deportal.domain.court.Court;
 import com.deportal.domain.court.SportType;
@@ -72,6 +74,9 @@ class ReservationControllerTest {
 	@MockitoBean
 	private CancelReservation cancelReservation;
 
+	@MockitoBean
+	private QuoteReservation quoteReservation;
+
 	@Test
 	void listsBookableCourtsForACustomer() throws Exception {
 		Court court = new Court(4L, "Norte", "FOOTBALL", 10, LocalTime.of(6, 0), LocalTime.of(22, 0),
@@ -94,7 +99,8 @@ class ReservationControllerTest {
 	@Test
 	void createsAReservation() throws Exception {
 		Reservation reservation = new Reservation(9L, 1L, 4L, LocalDate.of(2026, 10, 19), LocalTime.of(16, 0), 2,
-				ReservationStatus.CONFIRMED, new BigDecimal("20.00"), new BigDecimal("0.10"), new BigDecimal("36.00"));
+				ReservationStatus.CONFIRMED, new BigDecimal("20.00"), new BigDecimal("0.10"), new BigDecimal("36.00"),
+				null);
 		when(createReservation.execute(1L, 4L, LocalDate.of(2026, 10, 19), LocalTime.of(16, 0), 2))
 			.thenReturn(new ReservationDetails(reservation, "Norte"));
 		when(listAvailability.execute(4L, LocalDate.of(2026, 10, 19), 2))
@@ -121,14 +127,34 @@ class ReservationControllerTest {
 	}
 
 	@Test
+	void quotesTheSequentialDiscounts() throws Exception {
+		when(quoteReservation.execute(1L, 4L, LocalTime.of(8, 0), 2)).thenReturn(new PriceQuote(new BigDecimal("40.00"),
+				new BigDecimal("4.00"), new BigDecimal("7.20"), new BigDecimal("28.80")));
+
+		mockMvc
+			.perform(get("/api/reservations/quote").header("Authorization", bearer(UserRole.CUSTOMER))
+				.param("courtId", "4")
+				.param("startsAt", "08:00")
+				.param("durationHours", "2"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.subtotal").value("40.00"))
+			.andExpect(jsonPath("$.memberDiscount").value("4.00"))
+			.andExpect(jsonPath("$.offPeakDiscount").value("7.20"))
+			.andExpect(jsonPath("$.total").value("28.80"))
+			.andExpect(jsonPath("$.endsAt").value("10:00"));
+	}
+
+	@Test
 	void cancelsOnlyThroughTheCustomerSession() throws Exception {
 		Reservation reservation = new Reservation(9L, 1L, 4L, LocalDate.of(2026, 10, 19), LocalTime.of(16, 0), 1,
-				ReservationStatus.CANCELLED, new BigDecimal("20.00"), new BigDecimal("0.00"), new BigDecimal("20.00"));
+				ReservationStatus.CANCELLED, new BigDecimal("20.00"), new BigDecimal("0.00"), new BigDecimal("20.00"),
+				new BigDecimal("20.00"));
 		when(cancelReservation.execute(1L, 9L)).thenReturn(new ReservationDetails(reservation, "Norte"));
 
 		mockMvc.perform(delete("/api/reservations/9").header("Authorization", bearer(UserRole.CUSTOMER)))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.status").value("CANCELLED"));
+			.andExpect(jsonPath("$.status").value("CANCELLED"))
+			.andExpect(jsonPath("$.refundAmount").value("20.00"));
 	}
 
 	private String bearer(UserRole role) {

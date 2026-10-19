@@ -1,4 +1,4 @@
-import { Court } from '../../admin/courts/court.model';
+import { isRecord, numberOf, text } from '../../shared/http/parse';
 
 export interface Slot {
   startsAt: string;
@@ -19,10 +19,20 @@ export interface CustomerReservation {
   subtotal: string;
   discountAmount: string;
   total: string;
+  refundAmount?: string;
 }
 
-export interface SessionMembership {
-  type: 'MEMBER' | 'NON_MEMBER';
+export interface MyReservation {
+  id: number;
+  courtName: string;
+  date: string;
+  startsAt: string;
+  endsAt: string;
+  durationHours: number;
+  status: 'CONFIRMED' | 'WAITING';
+  total: string;
+  cancellable: boolean;
+  refundAmount: string | null;
 }
 
 export interface Quote {
@@ -79,24 +89,15 @@ export function shiftMonth(year: number, month: number, delta: number): { year: 
   return { year: next.getUTCFullYear(), month: next.getUTCMonth() + 1 };
 }
 
-export function quoteFor(court: Court, hours: number, member: boolean, startsAt: string): Quote {
-  const subtotalCents = Math.round(Number(court.hourlyRate) * 100) * hours;
-  const memberCents = member ? Math.round(subtotalCents * 0.1) : 0;
+export function parseQuote(body: unknown): Quote {
+  const record = objectOf(body);
   return {
-    subtotal: subtotalCents / 100,
-    memberDiscount: memberCents / 100,
-    offPeakDiscount: 0,
-    total: (subtotalCents - memberCents) / 100,
-    endsAt: addHours(startsAt, hours),
+    subtotal: moneyOf(record, 'subtotal'),
+    memberDiscount: moneyOf(record, 'memberDiscount'),
+    offPeakDiscount: moneyOf(record, 'offPeakDiscount'),
+    total: moneyOf(record, 'total'),
+    endsAt: text(record, 'endsAt'),
   };
-}
-
-export function parseCourts(body: unknown): Court[] {
-  if (!Array.isArray(body)) {
-    throw new Error('Invalid courts response');
-  }
-
-  return body.map((item) => parseCourt(item));
 }
 
 export function parseSlots(body: unknown): Slot[] {
@@ -136,32 +137,42 @@ export function parseReservation(body: unknown): CustomerReservation {
     subtotal: text(record, 'subtotal'),
     discountAmount: text(record, 'discountAmount'),
     total: text(record, 'total'),
+    refundAmount: typeof record['refundAmount'] === 'string' ? record['refundAmount'] : undefined,
   };
 }
 
-export function parseMembership(body: unknown): SessionMembership {
-  const record = objectOf(body);
-  return { type: record['type'] === 'MEMBER' ? 'MEMBER' : 'NON_MEMBER' };
+export function parseReservations(body: unknown): MyReservation[] {
+  if (!Array.isArray(body)) {
+    throw new Error('Invalid reservations response');
+  }
+
+  return body.map((item) => parseMine(item));
 }
 
-function parseCourt(body: unknown): Court {
+export function reservationStatusLabel(status: MyReservation['status']): string {
+  return status === 'WAITING' ? 'En lista de espera' : 'Confirmada';
+}
+
+function parseMine(body: unknown): MyReservation {
   const record = objectOf(body);
-  const sport = objectOf(record['sportType']);
+  const status = record['status'];
+  if (status !== 'CONFIRMED' && status !== 'WAITING') {
+    throw new Error('Invalid reservations response');
+  }
+
+  const refund = record['refundAmount'];
   return {
     id: numberOf(record, 'id'),
-    name: text(record, 'name'),
-    sportType: { code: text(sport, 'code'), name: text(sport, 'name') },
-    capacity: numberOf(record, 'capacity'),
-    opensAt: text(record, 'opensAt'),
-    closesAt: text(record, 'closesAt'),
-    hourlyRate: text(record, 'hourlyRate'),
+    courtName: text(record, 'courtName'),
+    date: text(record, 'date'),
+    startsAt: text(record, 'startsAt'),
+    endsAt: text(record, 'endsAt'),
+    durationHours: numberOf(record, 'durationHours'),
+    status,
+    total: text(record, 'total'),
+    cancellable: record['cancellable'] === true,
+    refundAmount: typeof refund === 'string' ? refund : null,
   };
-}
-
-function addHours(startsAt: string, hours: number): string {
-  const [hour, minute] = startsAt.split(':');
-  const total = Number(hour) * 60 + Number(minute ?? 0) + hours * 60;
-  return `${pad(Math.floor(total / 60))}:${pad(total % 60)}`;
 }
 
 function pad(value: number): string {
@@ -169,27 +180,18 @@ function pad(value: number): string {
 }
 
 function objectOf(value: unknown): Record<string, unknown> {
-  if (typeof value !== 'object' || value === null) {
-    throw new Error('Invalid response');
-  }
-
-  return value as Record<string, unknown>;
-}
-
-function text(record: Record<string, unknown>, key: string): string {
-  const value = record[key];
-  if (typeof value !== 'string' || value.length === 0) {
+  if (!isRecord(value)) {
     throw new Error('Invalid response');
   }
 
   return value;
 }
 
-function numberOf(record: Record<string, unknown>, key: string): number {
-  const value = record[key];
-  if (typeof value !== 'number' || !Number.isFinite(value)) {
+function moneyOf(record: Record<string, unknown>, key: string): number {
+  const amount = Number(text(record, key));
+  if (!Number.isFinite(amount)) {
     throw new Error('Invalid response');
   }
 
-  return value;
+  return amount;
 }

@@ -1,9 +1,9 @@
 import { httpResource } from '@angular/common/http';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { type EChartsCoreOption } from 'echarts/core';
-import { Notice } from '../../auth/notice/notice';
-import { parseSportTypes } from '../courts/court-service';
-import { SportType } from '../courts/court.model';
+import { Notice } from '../../shared/notice/notice';
+import { parseSportTypes } from '../../shared/court/parse-court';
+import { SportType } from '../../shared/court/court.model';
 import { ReportChart } from './report-chart/report-chart';
 import {
   emptyReport,
@@ -24,7 +24,7 @@ interface ReportQuery {
   selector: 'app-reports',
   imports: [ReportChart],
   templateUrl: './reports.html',
-  styleUrl: './reports.css',
+  styleUrls: ['../../shared/page/page.css', './reports.css'],
 })
 export class Reports {
   private readonly notice = inject(Notice);

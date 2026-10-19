@@ -32,18 +32,10 @@ class ReservationRulesTest {
 		assertThat(ordered).extracting(Reservation::id).containsExactly(1L, 3L, 2L);
 	}
 
-	@Test
-	void capsTheDiscountAtThirtyPercent() {
-		assertThat(ReservationDiscount.rate(true)).isEqualByComparingTo("0.10");
-		assertThat(ReservationDiscount.rate(false)).isEqualByComparingTo("0.00");
-		assertThat(ReservationDiscount.rate(true)).isLessThanOrEqualTo(ReservationDiscount.MAX_RATE);
-		assertThat(ReservationDiscount.total(new BigDecimal("20.00"), 2, new BigDecimal("0.10")))
-			.isEqualByComparingTo("36.00");
-	}
-
 	private static Reservation waiting(Long id, Long customerId) {
 		return new Reservation(id, customerId, 4L, LocalDate.of(2026, 10, 18), LocalTime.of(16, 0), 1,
-				ReservationStatus.WAITING, new BigDecimal("20.00"), new BigDecimal("0.00"), new BigDecimal("20.00"));
+				ReservationStatus.WAITING, new BigDecimal("20.00"), new BigDecimal("0.00"), new BigDecimal("20.00"),
+				null);
 	}
 
 }

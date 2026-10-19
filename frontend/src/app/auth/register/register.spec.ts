@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { Notice } from '../notice/notice';
+import { Notice } from '../../shared/notice/notice';
 import { authInterceptor } from '../session/auth-interceptor';
 import { Register } from './register';
 

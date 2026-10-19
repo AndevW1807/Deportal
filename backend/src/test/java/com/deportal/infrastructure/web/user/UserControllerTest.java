@@ -5,7 +5,7 @@ import java.util.List;
 import com.deportal.application.auth.AuthenticatedUser;
 import com.deportal.application.user.ChangeMembership;
 import com.deportal.application.user.ListCustomers;
-import com.deportal.domain.user.CustomerNotFound;
+import com.deportal.domain.user.failure.CustomerNotFound;
 import com.deportal.domain.user.MembershipType;
 import com.deportal.domain.user.UserAccount;
 import com.deportal.domain.user.UserRole;

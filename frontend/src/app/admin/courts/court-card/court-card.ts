@@ -1,7 +1,7 @@
 import { Component, computed, input, output } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { Court, capacityLabel, formatRate, sportLook } from '../court.model';
+import { Court, capacityLabel, formatRate, sportLook } from '../../../shared/court/court.model';
 
 @Component({
   selector: 'app-court-card',

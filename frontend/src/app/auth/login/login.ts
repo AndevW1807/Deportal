@@ -4,9 +4,9 @@ import { email, form, FormField, required, submit } from '@angular/forms/signals
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthLayout } from '../auth-layout/auth-layout';
-import { fieldMessage, fieldMessages } from '../form/field-message';
+import { fieldMessage, fieldMessages } from '../../shared/form/field-message';
 import { viewForRole } from '../guards/active-session-guard';
-import { Notice } from '../notice/notice';
+import { Notice } from '../../shared/notice/notice';
 import { AuthService } from '../session/auth-service';
 import { AuthSession } from '../session/auth-session';
 

@@ -1,4 +1,4 @@
-package com.deportal.domain.user;
+package com.deportal.domain.user.failure;
 
 public final class EmailAlreadyUsed extends RuntimeException {
 

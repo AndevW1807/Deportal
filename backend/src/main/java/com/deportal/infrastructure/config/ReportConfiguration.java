@@ -2,7 +2,7 @@ package com.deportal.infrastructure.config;
 
 import com.deportal.application.report.UtilizationReport;
 import com.deportal.domain.court.CourtRepository;
-import com.deportal.domain.court.ReservationUsage;
+import com.deportal.domain.report.ReservationUsage;
 import com.deportal.domain.court.SportTypeCatalog;
 
 import org.springframework.context.annotation.Bean;

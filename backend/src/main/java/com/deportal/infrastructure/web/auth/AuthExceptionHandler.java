@@ -3,7 +3,7 @@ package com.deportal.infrastructure.web.auth;
 import com.deportal.application.auth.failure.InvalidCredentials;
 import com.deportal.application.auth.failure.InvalidRegistration;
 import com.deportal.application.auth.failure.PasswordTooLong;
-import com.deportal.domain.user.EmailAlreadyUsed;
+import com.deportal.domain.user.failure.EmailAlreadyUsed;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;

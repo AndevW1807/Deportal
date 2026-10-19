@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 
-app-admin-shell {
+app-shell {
   color-scheme: dark;
   @include mat.theme(
     (

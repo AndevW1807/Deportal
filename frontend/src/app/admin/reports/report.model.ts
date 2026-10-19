@@ -1,4 +1,5 @@
-import { formatCop } from '../courts/court.model';
+import { formatCop } from '../../shared/format/money';
+import { isRecord, numberOf, text } from '../../shared/http/parse';
 
 export interface CourtUtilization {
   id: number;
@@ -55,46 +56,27 @@ export function parseReport(body: unknown): UtilizationReport {
   }
 
   return {
-    reservations: numberOf(body['reservations']),
-    reservedHours: numberOf(body['reservedHours']),
-    income: numberOf(body['income']),
-    occupancyRate: numberOf(body['occupancyRate']),
-    courts: body['courts'].map((item) => parseCourt(item)),
+    reservations: numberOf(body, 'reservations'),
+    reservedHours: numberOf(body, 'reservedHours'),
+    income: numberOf(body, 'income'),
+    occupancyRate: numberOf(body, 'occupancyRate'),
+    courts: body['courts'].map((item) => parseUtilization(item)),
   };
 }
 
-function parseCourt(body: unknown): CourtUtilization {
+function parseUtilization(body: unknown): CourtUtilization {
   if (!isRecord(body)) {
     throw new Error('Invalid utilization report');
   }
 
   return {
-    id: numberOf(body['id']),
-    name: textOf(body['name']),
-    sportName: textOf(body['sportName']),
-    reservations: numberOf(body['reservations']),
-    reservedHours: numberOf(body['reservedHours']),
-    availableHours: numberOf(body['availableHours']),
-    occupancyRate: numberOf(body['occupancyRate']),
-    income: numberOf(body['income']),
+    id: numberOf(body, 'id'),
+    name: text(body, 'name'),
+    sportName: text(body, 'sportName'),
+    reservations: numberOf(body, 'reservations'),
+    reservedHours: numberOf(body, 'reservedHours'),
+    availableHours: numberOf(body, 'availableHours'),
+    occupancyRate: numberOf(body, 'occupancyRate'),
+    income: numberOf(body, 'income'),
   };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function numberOf(value: unknown): number {
-  const amount = typeof value === 'number' ? value : Number(value);
-  if (!Number.isFinite(amount)) {
-    throw new Error('Invalid utilization report');
-  }
-  return amount;
-}
-
-function textOf(value: unknown): string {
-  if (typeof value !== 'string' || value.length === 0) {
-    throw new Error('Invalid utilization report');
-  }
-  return value;
 }

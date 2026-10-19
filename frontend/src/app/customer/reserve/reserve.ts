@@ -1,36 +1,36 @@
 import { httpResource } from '@angular/common/http';
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import { firstValueFrom } from 'rxjs';
-import { Notice } from '../../auth/notice/notice';
-import { Court, capacityLabel, formatCop, formatRate, sportLook } from '../../admin/courts/court.model';
-import { ReservationService } from './reservation-service';
+import { Court } from '../../shared/court/court.model';
+import { parseCourts } from '../../shared/court/parse-court';
+import { httpMessage } from '../../shared/http/http-message';
+import { Notice } from '../../shared/notice/notice';
+import { ReservationService } from '../shared/reservation-service';
 import {
   Slot,
   bogotaToday,
-  formatDay,
   monthCells,
   monthTitle,
-  parseCourts,
-  parseMembership,
+  parseQuote,
   parseSlots,
-  quoteFor,
   shiftMonth,
-} from './reservation.model';
+} from '../shared/reservation.model';
+import { ReserveCourtStep } from './reserve-court-step';
+import { ReserveDateStep } from './reserve-date-step';
+import { ReserveHoursStep } from './reserve-hours-step';
+import { ReserveSummary } from './reserve-summary';
 
 @Component({
   selector: 'app-reserve',
-  imports: [MatIcon],
+  imports: [ReserveCourtStep, ReserveDateStep, ReserveHoursStep, ReserveSummary],
   templateUrl: './reserve.html',
-  styleUrl: './reserve.css',
+  styleUrls: ['../../shared/page/page.css', './reserve.css'],
 })
 export class Reserve {
   private readonly reservations = inject(ReservationService);
   private readonly notice = inject(Notice);
-  private readonly today = bogotaToday();
+  protected readonly today = bogotaToday();
   protected readonly steps = ['Cancha', 'Horario', 'Resumen'] as const;
-  protected readonly durations = [1, 2, 3, 4, 5, 6, 7, 8];
-  protected readonly weekdays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
   protected readonly step = signal(0);
   protected readonly query = signal('');
   protected readonly sport = signal('');
@@ -40,15 +40,7 @@ export class Reserve {
   protected readonly start = signal<string | null>(null);
   protected readonly month = signal(monthOf(this.today));
   protected readonly busy = signal(false);
-  protected readonly formatRate = formatRate;
-  protected readonly formatCop = formatCop;
-  protected readonly capacityLabel = capacityLabel;
-  protected readonly sportLook = sportLook;
-  protected readonly formatDay = formatDay;
 
-  protected readonly session = httpResource(() => '/api/auth/session', {
-    parse: parseMembership,
-  });
   protected readonly courtsResource = httpResource(() => '/api/reservations/courts', {
     defaultValue: [] as Court[],
     parse: parseCourts,
@@ -69,8 +61,23 @@ export class Reserve {
     defaultValue: [] as Slot[],
     parse: parseSlots,
   });
+  protected readonly quoteResource = httpResource(() => {
+    const courtId = this.courtId();
+    const start = this.start();
+    if (courtId === null || start === null) {
+      return undefined;
+    }
 
-  protected readonly member = computed(() => this.session.hasValue() && this.session.value().type === 'MEMBER');
+    const params = new URLSearchParams({
+      courtId: String(courtId),
+      startsAt: start,
+      durationHours: String(this.duration()),
+    });
+    return `/api/reservations/quote?${params}`;
+  }, {
+    parse: parseQuote,
+  });
+
   protected readonly courts = computed(() =>
     this.courtsResource.hasValue() ? this.courtsResource.value() : [],
   );
@@ -102,20 +109,18 @@ export class Reserve {
     return shown.year > current.year || (shown.year === current.year && shown.month > current.month);
   });
   protected readonly slots = computed(() => (this.availability.hasValue() ? this.availability.value() : []));
-  protected readonly quote = computed(() => {
-    const court = this.court();
-    const start = this.start();
-    if (court === null || start === null) {
-      return null;
-    }
-
-    return quoteFor(court, this.duration(), this.member(), start);
-  });
+  protected readonly quote = computed(() =>
+    this.quoteResource.hasValue() ? this.quoteResource.value() : null,
+  );
   protected readonly sameDayWait = computed(() => this.date() === this.today);
 
   constructor() {
     effect(() => {
-      if (this.courtsResource.status() === 'error' || this.availability.status() === 'error') {
+      if (
+        this.courtsResource.status() === 'error' ||
+        this.availability.status() === 'error' ||
+        this.quoteResource.status() === 'error'
+      ) {
         this.notice.error('No se pudo conectar con el servidor');
       }
     });
@@ -124,20 +129,6 @@ export class Reserve {
   protected chooseCourt(court: Court): void {
     this.courtId.set(court.id);
     this.start.set(null);
-  }
-
-  protected onQuery(event: Event): void {
-    const input = event.target;
-    if (input instanceof HTMLInputElement) {
-      this.query.set(input.value);
-    }
-  }
-
-  protected onSport(event: Event): void {
-    const input = event.target;
-    if (input instanceof HTMLSelectElement) {
-      this.sport.set(input.value);
-    }
   }
 
   protected clearFilters(): void {
@@ -167,41 +158,18 @@ export class Reserve {
     this.month.update((current) => shiftMonth(current.year, current.month, 1));
   }
 
-  protected past(iso: string): boolean {
-    return iso < this.today;
-  }
-
   protected chooseDate(iso: string): void {
-    if (this.past(iso)) {
-      return;
-    }
-
     this.date.set(iso);
     this.start.set(null);
   }
 
-  protected onDuration(event: Event): void {
-    const input = event.target;
-    if (!(input instanceof HTMLSelectElement)) {
-      return;
-    }
-
-    this.duration.set(Number(input.value));
+  protected changeDuration(hours: number): void {
+    this.duration.set(hours);
     this.start.set(null);
   }
 
-  protected selectable(slot: Slot): boolean {
-    if (slot.state === 'FREE') {
-      return true;
-    }
-
-    return slot.state === 'OCCUPIED' && this.sameDayWait();
-  }
-
-  protected chooseStart(slot: Slot): void {
-    if (this.selectable(slot)) {
-      this.start.set(slot.startsAt);
-    }
+  protected chooseStart(startsAt: string): void {
+    this.start.set(startsAt);
   }
 
   protected continueFromSchedule(): void {
@@ -251,16 +219,8 @@ function monthOf(iso: string): { year: number; month: number } {
 }
 
 function messageOf(error: unknown): string {
-  if (typeof error === 'object' && error !== null && 'status' in error) {
-    const status = error.status;
-    if (status === 409) {
-      return 'Ese horario no está disponible.';
-    }
-
-    if (status === 400) {
-      return 'Revisa la fecha, la hora y la duración.';
-    }
-  }
-
-  return 'No se pudo conectar con el servidor';
+  return httpMessage(error, {
+    409: 'Ese horario no está disponible.',
+    400: 'Revisa la fecha, la hora y la duración.',
+  });
 }

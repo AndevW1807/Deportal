@@ -2,7 +2,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { authInterceptor } from '../../auth/session/auth-interceptor';
-import { formatCop } from '../courts/court.model';
+import { formatCop } from '../../shared/format/money';
 import { Reports } from './reports';
 
 describe('Reports', () => {

@@ -1,0 +1,34 @@
+<div class="calendar">
+  <div class="month">
+    <button type="button" aria-label="Mes anterior" [disabled]="!canGoBack()" (click)="previousMonth.emit()">
+      <mat-icon aria-hidden="true">chevron_left</mat-icon>
+    </button>
+    <strong>{{ monthLabel() }}</strong>
+    <button type="button" aria-label="Mes siguiente" (click)="nextMonth.emit()">
+      <mat-icon aria-hidden="true">chevron_right</mat-icon>
+    </button>
+  </div>
+  <div class="weekdays" aria-hidden="true">
+    @for (weekday of weekdays; track weekday) {
+      <span>{{ weekday }}</span>
+    }
+  </div>
+  <div class="grid" role="group" aria-label="Calendario">
+    @for (cell of days(); track $index) {
+      @if (cell) {
+        <button
+          type="button"
+          [disabled]="past(cell.iso)"
+          [class.selected]="date() === cell.iso"
+          [attr.aria-pressed]="date() === cell.iso"
+          [attr.aria-label]="formatDay(cell.iso)"
+          (click)="choose(cell.iso)"
+        >
+          {{ cell.day }}
+        </button>
+      } @else {
+        <span></span>
+      }
+    }
+  </div>
+</div>

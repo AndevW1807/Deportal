@@ -79,7 +79,7 @@ public class ReservationRepositoryAdapter implements ReservationRepository {
 		}
 		ReservationJpaEntity row = reservations.findByIdAndDeletedAtIsNull(reservation.id())
 			.orElseThrow(ReservationNotFound::new);
-		row.changeStatus(reservation.status(), now);
+		row.changeStatus(reservation, now);
 		return reservations.save(row).toDomain();
 	}
 

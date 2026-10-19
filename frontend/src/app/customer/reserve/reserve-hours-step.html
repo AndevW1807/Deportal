@@ -1,0 +1,41 @@
+<div class="hours">
+  <div class="hours-head">
+    <h2>Hora de inicio</h2>
+    <label class="sport-filter duration">
+      Duración
+      <select aria-label="Duración" [value]="duration()" (change)="onDuration($event)">
+        @for (hours of durations; track hours) {
+          <option [value]="hours">{{ hours === 1 ? '1 hora' : hours + ' horas' }}</option>
+        }
+      </select>
+    </label>
+  </div>
+  <p class="note">Entre una reserva y la siguiente se deja 1 hora de limpieza.</p>
+  @if (sameDayWait()) {
+    <p class="note">Si eliges un horario ocupado, quedas en lista de espera. Los miembros tienen prioridad.</p>
+  }
+  @if (slots().length === 0) {
+    <p class="empty">No hay horarios disponibles para esa duración.</p>
+  } @else {
+    <div class="starts" role="group" aria-label="Hora de inicio">
+      @for (slot of slots(); track slot.startsAt) {
+        <button
+          type="button"
+          [disabled]="!selectable(slot)"
+          [class.selected]="start() === slot.startsAt"
+          [class.occupied]="slot.state === 'OCCUPIED'"
+          [attr.aria-pressed]="start() === slot.startsAt"
+          (click)="choose(slot)"
+        >
+          {{ slot.startsAt }}
+          @if (slot.state === 'OCCUPIED') {
+            <small>Ocupada</small>
+          }
+          @if (slot.state === 'BLOCKED') {
+            <small>Limpieza</small>
+          }
+        </button>
+      }
+    </div>
+  }
+</div>

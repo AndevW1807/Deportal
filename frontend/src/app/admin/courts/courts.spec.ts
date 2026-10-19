@@ -3,8 +3,8 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { authInterceptor } from '../../auth/session/auth-interceptor';
-import { Notice } from '../../auth/notice/notice';
-import { Court, formatRate } from './court.model';
+import { Notice } from '../../shared/notice/notice';
+import { Court, formatRate } from '../../shared/court/court.model';
 import { Courts } from './courts';
 
 describe('Courts', () => {

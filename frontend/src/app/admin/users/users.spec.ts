@@ -2,7 +2,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { authInterceptor } from '../../auth/session/auth-interceptor';
-import { Notice } from '../../auth/notice/notice';
+import { Notice } from '../../shared/notice/notice';
 import { Users } from './users';
 
 describe('Users', () => {

@@ -13,13 +13,14 @@ import java.util.Set;
 
 import com.deportal.domain.court.Court;
 import com.deportal.domain.court.CourtRepository;
+import com.deportal.domain.reservation.PriceQuote;
 import com.deportal.domain.reservation.Reservation;
 import com.deportal.domain.reservation.ReservationRepository;
 import com.deportal.domain.reservation.ReservationStatus;
 import com.deportal.domain.reservation.failure.InvalidReservation;
 import com.deportal.domain.reservation.failure.ReservationConflict;
 import com.deportal.domain.reservation.failure.ReservationNotFound;
-import com.deportal.domain.user.CustomerNotFound;
+import com.deportal.domain.user.failure.CustomerNotFound;
 import com.deportal.domain.user.MembershipType;
 import com.deportal.domain.user.UserAccount;
 import com.deportal.domain.user.UserRepository;
@@ -36,6 +37,17 @@ class ReservationUseCaseTest {
 	private static final Clock CLOCK = Clock.fixed(Instant.parse("2026-10-18T20:00:00Z"), ZoneOffset.UTC);
 	private static final Court COURT = new Court(4L, "Norte", "FOOTBALL", 10, LocalTime.of(6, 0), LocalTime.of(22, 0),
 			new BigDecimal("20.00"), false);
+
+	@Test
+	void quotesMemberAndOffPeakDiscountsFromTheCourtRate() {
+		Memory memory = new Memory();
+
+		PriceQuote quote = new QuoteReservation(new Courts(), memory.users(MembershipType.MEMBER, UserRole.CUSTOMER))
+			.execute(7L, 4L, LocalTime.of(8, 0), 2);
+
+		assertThat(quote.subtotal()).isEqualByComparingTo("40.00");
+		assertThat(quote.total()).isEqualByComparingTo("28.80");
+	}
 
 	@Test
 	void confirmsAFreeSlotAndStoresTheMemberDiscount() {
@@ -116,7 +128,7 @@ class ReservationUseCaseTest {
 		memory.rows.add(booked(2L, ReservationStatus.WAITING, TODAY, LocalTime.of(16, 0), 1));
 		memory.rows.add(booked(3L, ReservationStatus.WAITING, TODAY, LocalTime.of(17, 0), 1));
 
-		new CancelReservation(memory, new Courts(), accounts()).execute(7L, 1L);
+		new CancelReservation(memory, new Courts(), accounts(), CLOCK).execute(7L, 1L);
 
 		assertThat(memory.rows.get(0).status()).isEqualTo(ReservationStatus.CANCELLED);
 		assertThat(memory.rows.get(1).status()).isEqualTo(ReservationStatus.CONFIRMED);
@@ -128,9 +140,22 @@ class ReservationUseCaseTest {
 		Memory memory = new Memory();
 		memory.rows.add(booked(2L, ReservationStatus.WAITING, TODAY, LocalTime.of(16, 0), 1));
 
-		new CancelReservation(memory, new Courts(), accounts()).execute(7L, 2L);
+		ReservationDetails cancelled = new CancelReservation(memory, new Courts(), accounts(), CLOCK).execute(7L, 2L);
 
 		assertThat(memory.rows.get(0).status()).isEqualTo(ReservationStatus.CANCELLED);
+		assertThat(cancelled.reservation().refundAmount()).isEqualByComparingTo("0.00");
+	}
+
+	@Test
+	void showsZeroRefundForAWaitingReservationInTheList() {
+		Memory memory = new Memory();
+		memory.rows.add(booked(2L, ReservationStatus.WAITING, TODAY, LocalTime.of(18, 0), 1));
+
+		List<OwnedReservation> mine = new ListMyReservations(memory, new Courts(), CLOCK).execute(7L);
+
+		assertThat(mine).hasSize(1);
+		assertThat(mine.get(0).cancellable()).isTrue();
+		assertThat(mine.get(0).refundAmount()).isEqualByComparingTo("0.00");
 	}
 
 	@Test
@@ -138,8 +163,28 @@ class ReservationUseCaseTest {
 		Memory memory = new Memory();
 		memory.rows.add(booked(1L, ReservationStatus.CONFIRMED, TODAY, LocalTime.of(16, 0), 1));
 
-		assertThatThrownBy(() -> new CancelReservation(memory, new Courts(), accounts()).execute(8L, 1L))
+		assertThatThrownBy(() -> new CancelReservation(memory, new Courts(), accounts(), CLOCK).execute(8L, 1L))
 			.isInstanceOf(ReservationNotFound.class);
+	}
+
+	@Test
+	void refundsByHowFarTheStartIsAndRefusesAStartedReservation() {
+		Memory memory = new Memory();
+		memory.rows.add(booked(1L, ReservationStatus.CONFIRMED, TODAY.plusDays(2), LocalTime.of(16, 0), 1));
+		memory.rows.add(booked(2L, ReservationStatus.CONFIRMED, TODAY, LocalTime.of(18, 0), 1));
+		memory.rows.add(booked(3L, ReservationStatus.CONFIRMED, TODAY, LocalTime.of(14, 0), 1));
+
+		List<OwnedReservation> mine = new ListMyReservations(memory, new Courts(), CLOCK).execute(7L);
+
+		assertThat(mine.get(2).cancellable()).isFalse();
+		assertThat(mine.get(2).refundAmount()).isNull();
+		assertThat(mine.get(1).cancellable()).isTrue();
+		assertThat(mine.get(1).refundAmount()).isEqualByComparingTo("10.00");
+		assertThatThrownBy(() -> new CancelReservation(memory, new Courts(), accounts(), CLOCK).execute(7L, 3L))
+			.isInstanceOf(InvalidReservation.class);
+		assertThat(new CancelReservation(memory, new Courts(), accounts(), CLOCK).execute(7L, 1L)
+			.reservation()
+			.refundAmount()).isEqualByComparingTo("20.00");
 	}
 
 	@Test
@@ -149,7 +194,7 @@ class ReservationUseCaseTest {
 		memory.rows.add(booked(2L, 8L, ReservationStatus.WAITING, TODAY, LocalTime.of(16, 0), 1));
 		memory.rows.add(booked(3L, 9L, ReservationStatus.WAITING, TODAY, LocalTime.of(16, 0), 1));
 
-		new CancelReservation(memory, new Courts(), accounts(9L)).execute(7L, 1L);
+		new CancelReservation(memory, new Courts(), accounts(9L), CLOCK).execute(7L, 1L);
 
 		assertThat(memory.rows.get(1).status()).isEqualTo(ReservationStatus.WAITING);
 		assertThat(memory.rows.get(2).status()).isEqualTo(ReservationStatus.CONFIRMED);
@@ -178,7 +223,7 @@ class ReservationUseCaseTest {
 	private static Reservation booked(Long id, Long customerId, ReservationStatus status, LocalDate date, LocalTime start,
 			int hours) {
 		return new Reservation(id, customerId, 4L, date, start, hours, status, new BigDecimal("20.00"),
-				new BigDecimal("0.00"), new BigDecimal("20.00"));
+				new BigDecimal("0.00"), new BigDecimal("20.00"), null);
 	}
 
 	private static UserRepository accounts(Long... memberIds) {
@@ -315,7 +360,7 @@ class ReservationUseCaseTest {
 		private static Reservation withId(Reservation reservation, long id) {
 			return new Reservation(id, reservation.customerId(), reservation.courtId(), reservation.date(),
 					reservation.startsAt(), reservation.durationHours(), reservation.status(), reservation.hourlyRate(),
-					reservation.discountRate(), reservation.total());
+					reservation.discountRate(), reservation.total(), reservation.refundAmount());
 		}
 
 	}

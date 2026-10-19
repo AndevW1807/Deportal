@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { Court } from '../court.model';
+import { Court } from '../../../shared/court/court.model';
 
 @Component({
   selector: 'app-delete-court',

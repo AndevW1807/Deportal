@@ -4,18 +4,19 @@ import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { firstValueFrom } from 'rxjs';
-import { Notice } from '../../auth/notice/notice';
+import { Notice } from '../../shared/notice/notice';
 import { CourtCard } from './court-card/court-card';
 import { CourtEditor } from './court-editor/court-editor';
-import { parseCourts, parseSportTypes, CourtService } from './court-service';
-import { Court, SportType } from './court.model';
+import { parseCourts, parseSportTypes } from '../../shared/court/parse-court';
+import { CourtService } from './court-service';
+import { Court, SportType } from '../../shared/court/court.model';
 import { DeleteCourtDialog } from './delete-court/delete-court';
 
 @Component({
   selector: 'app-courts',
   imports: [CourtCard, MatButton, MatIcon],
   templateUrl: './courts.html',
-  styleUrl: './courts.css',
+  styleUrls: ['../../shared/page/page.css', './courts.css'],
 })
 export class Courts {
   private readonly dialog = inject(MatDialog);

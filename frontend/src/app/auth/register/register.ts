@@ -4,8 +4,8 @@ import { email, form, FormField, required, submit, validate } from '@angular/for
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthLayout } from '../auth-layout/auth-layout';
-import { fieldMessage, fieldMessages } from '../form/field-message';
-import { Notice } from '../notice/notice';
+import { fieldMessage, fieldMessages } from '../../shared/form/field-message';
+import { Notice } from '../../shared/notice/notice';
 import { AuthService } from '../session/auth-service';
 
 @Component({

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Service, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { isRecord } from '../../shared/http/parse';
 import { AccessToken, SessionUser } from './session.model';
 
 @Service()
@@ -53,8 +54,4 @@ function parseSessionUser(body: unknown): SessionUser {
     role: body['role'],
     type: body['type'] === 'NON_MEMBER' ? 'NON_MEMBER' : 'MEMBER',
   };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
 }

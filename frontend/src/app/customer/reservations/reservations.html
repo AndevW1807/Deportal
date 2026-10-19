@@ -1,0 +1,31 @@
+<section class="page">
+  <h1>Mis reservas</h1>
+  <p class="help">Estas son tus reservas confirmadas y en lista de espera.</p>
+
+  @if (rows().length === 0) {
+    <p class="empty">Todavía no tienes reservas.</p>
+  } @else {
+    <ul class="rows">
+      @for (row of rows(); track row.id) {
+        <li>
+          <div class="heading">
+            <strong>{{ row.courtName }}</strong>
+            <span>{{ statusLabel(row.status) }}</span>
+          </div>
+          <p>{{ formatDay(row.date) }}</p>
+          <p>{{ row.startsAt }} – {{ row.endsAt }} · {{ hoursLabel(row.durationHours) }}</p>
+          <p class="amount">{{ money(row.total) }}</p>
+          <div class="cancel">
+            @if (row.cancellable) {
+              <p>Reembolso si cancelas: {{ money(row.refundAmount) }}</p>
+              <button type="button" [disabled]="busy()" (click)="cancel(row)">Cancelar</button>
+            } @else {
+              <p>Ya empezó</p>
+              <button type="button" disabled>Cancelar</button>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</section>

@@ -2,7 +2,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { authInterceptor } from '../../auth/session/auth-interceptor';
-import { Court, formatCop } from '../../admin/courts/court.model';
+import { Court } from '../../shared/court/court.model';
+import { formatCop } from '../../shared/format/money';
 import { Reserve } from './reserve';
 
 describe('Reserve', () => {
@@ -55,6 +56,19 @@ describe('Reserve', () => {
     expect(fixture.nativeElement.textContent).toContain('1 hora de limpieza');
     fixture.nativeElement.querySelectorAll('.primary')[0].click();
     fixture.detectChanges();
+    const quote = http.expectOne((call) => call.url.startsWith('/api/reservations/quote'));
+    expect(quote.request.urlWithParams).toContain('courtId=4');
+    expect(quote.request.urlWithParams).toContain('startsAt=16');
+    expect(quote.request.urlWithParams).toContain('durationHours=1');
+    quote.flush({
+      subtotal: '20.00',
+      memberDiscount: '2.00',
+      offPeakDiscount: '0.00',
+      total: '18.00',
+      endsAt: '17:00',
+    });
+    await fixture.whenStable();
+    fixture.detectChanges();
 
     const summary = fixture.nativeElement.textContent as string;
     expect(summary).toContain('Descuento de miembro');
@@ -79,13 +93,6 @@ describe('Reserve', () => {
   });
 
   function flushOpen(): void {
-    http.expectOne('/api/auth/session').flush({
-      id: 1,
-      name: 'Juan Pérez',
-      email: 'juan.perez@deportal.test',
-      role: 'CUSTOMER',
-      type: 'MEMBER',
-    });
     http.expectOne('/api/reservations/courts').flush([
       court(4, 'Norte', 'FOOTBALL', 'Fútbol'),
       court(5, 'Sur', 'TENNIS', 'Tenis'),

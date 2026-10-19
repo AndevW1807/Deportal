@@ -7,22 +7,23 @@ import { provideRouter, Router } from '@angular/router';
 import { AuthSession } from '../../auth/session/auth-session';
 import { of } from 'rxjs';
 import { authInterceptor } from '../../auth/session/auth-interceptor';
-import { AdminShell } from './admin-shell';
+import { AppShell } from './app-shell';
 
 @Component({ template: '' })
 class Blank {}
 
-describe('AdminShell', () => {
-  let fixture: ComponentFixture<AdminShell>;
+describe('AppShell', () => {
+  let fixture: ComponentFixture<AppShell>;
   let http: HttpTestingController;
 
   async function setup(narrow: boolean, role: 'ADMIN' | 'CUSTOMER' = 'ADMIN'): Promise<void> {
     await TestBed.configureTestingModule({
-      imports: [AdminShell],
+      imports: [AppShell],
       providers: [
         provideRouter([
           { path: 'app', component: Blank },
           { path: 'app/reserve', component: Blank },
+          { path: 'app/reservations', component: Blank },
           { path: 'login', component: Blank },
           { path: 'admin/courts', component: Blank },
         ]),
@@ -36,7 +37,7 @@ describe('AdminShell', () => {
     }).compileComponents();
 
     http = TestBed.inject(HttpTestingController);
-    fixture = TestBed.createComponent(AdminShell);
+    fixture = TestBed.createComponent(AppShell);
     http.expectOne('/api/auth/session').flush({
       id: 1,
       name: role === 'ADMIN' ? 'Admin' : 'Ana',
@@ -69,6 +70,7 @@ describe('AdminShell', () => {
     expect(fixture.nativeElement.querySelector('[aria-label="Abrir menú"]')).toBeNull();
     expect(fixture.nativeElement.querySelector('.logout').textContent).toContain('Cerrar sesión');
     expect(fixture.nativeElement.textContent).not.toContain('Reservar cancha');
+    expect(fixture.nativeElement.textContent).not.toContain('Mis reservas');
   });
 
   it('shows Reservar cancha to a customer', async () => {
@@ -77,9 +79,11 @@ describe('AdminShell', () => {
       fixture.nativeElement.querySelectorAll('a[mat-list-item]');
     const brand: HTMLAnchorElement = fixture.nativeElement.querySelector('a.brand');
 
-    expect(links).toHaveLength(1);
+    expect(links).toHaveLength(2);
     expect(links[0].textContent).toContain('Reservar cancha');
     expect(links[0].getAttribute('href')).toBe('/app/reserve');
+    expect(links[1].textContent).toContain('Mis reservas');
+    expect(links[1].getAttribute('href')).toBe('/app/reservations');
     expect(fixture.nativeElement.textContent).not.toContain('Canchas');
     expect(fixture.nativeElement.textContent).not.toContain('Usuarios');
     expect(fixture.nativeElement.textContent).not.toContain('Reportes');

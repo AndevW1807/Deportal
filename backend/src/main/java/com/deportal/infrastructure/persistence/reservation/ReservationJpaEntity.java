@@ -75,30 +75,47 @@ public class ReservationJpaEntity {
 
 	static ReservationJpaEntity create(Reservation reservation, LocalDateTime now) {
 		ReservationJpaEntity row = new ReservationJpaEntity();
-		BigDecimal base = reservation.hourlyRate()
-			.multiply(BigDecimal.valueOf(reservation.durationHours()))
-			.setScale(2, RoundingMode.HALF_UP);
 		row.userId = reservation.customerId();
 		row.courtId = reservation.courtId();
 		row.reservationDate = reservation.date();
 		row.startsAt = reservation.startsAt();
-		row.endsAt = reservation.startsAt().plusHours(reservation.durationHours());
+		row.endsAt = reservation.endsAt();
 		row.status = reservation.status();
-		row.baseAmount = base;
-		row.discountAmount = base.subtract(reservation.total()).setScale(2, RoundingMode.HALF_UP);
+		row.baseAmount = reservation.subtotal();
+		row.discountAmount = reservation.discountAmount();
 		row.amountPaid = reservation.total();
 		row.createdAt = now;
 		row.updatedAt = now;
 		return row;
 	}
 
-	void changeStatus(ReservationStatus status, LocalDateTime now) {
-		this.status = status;
+	void changeStatus(Reservation reservation, LocalDateTime now) {
+		this.status = reservation.status();
 		this.updatedAt = now;
-		if (status == ReservationStatus.CANCELLED) {
+		if (reservation.status() == ReservationStatus.CANCELLED) {
 			this.cancelledAt = now;
-			this.refundAmount = BigDecimal.ZERO.setScale(2);
+			this.refundAmount = reservation.refundAmount().setScale(2);
 		}
+		else {
+			this.cancelledAt = null;
+			this.refundAmount = null;
+		}
+	}
+
+	Long courtId() {
+		return courtId;
+	}
+
+	LocalTime startsAt() {
+		return startsAt;
+	}
+
+	LocalTime endsAt() {
+		return endsAt;
+	}
+
+	BigDecimal amountPaid() {
+		return amountPaid;
 	}
 
 	Reservation toDomain() {
@@ -108,7 +125,7 @@ public class ReservationJpaEntity {
 		BigDecimal discountRate = baseAmount.signum() == 0 ? BigDecimal.ZERO.setScale(2)
 				: discountAmount.divide(baseAmount, 2, RoundingMode.HALF_UP);
 		return new Reservation(id, userId, courtId, reservationDate, startsAt, hours, status, hourly, discountRate,
-				amountPaid);
+				amountPaid, refundAmount);
 	}
 
 }

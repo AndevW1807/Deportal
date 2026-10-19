@@ -17,4 +17,8 @@ export class ReservationService {
   create(draft: ReservationDraft): Observable<CustomerReservation> {
     return this.http.post<unknown>('/api/reservations', draft).pipe(map((body) => parseReservation(body)));
   }
+
+  cancel(id: number): Observable<CustomerReservation> {
+    return this.http.delete<unknown>(`/api/reservations/${id}`).pipe(map((body) => parseReservation(body)));
+  }
 }

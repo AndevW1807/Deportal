@@ -1,6 +1,7 @@
 package com.deportal.domain.reservation;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -16,9 +17,11 @@ public final class Reservation {
 	private final BigDecimal hourlyRate;
 	private final BigDecimal discountRate;
 	private final BigDecimal total;
+	private final BigDecimal refundAmount;
 
 	public Reservation(Long id, Long customerId, Long courtId, LocalDate date, LocalTime startsAt, int durationHours,
-			ReservationStatus status, BigDecimal hourlyRate, BigDecimal discountRate, BigDecimal total) {
+			ReservationStatus status, BigDecimal hourlyRate, BigDecimal discountRate, BigDecimal total,
+			BigDecimal refundAmount) {
 		this.id = id;
 		this.customerId = customerId;
 		this.courtId = courtId;
@@ -29,11 +32,17 @@ public final class Reservation {
 		this.hourlyRate = hourlyRate;
 		this.discountRate = discountRate;
 		this.total = total;
+		this.refundAmount = refundAmount;
 	}
 
 	public Reservation withStatus(ReservationStatus status) {
 		return new Reservation(id, customerId, courtId, date, startsAt, durationHours, status, hourlyRate, discountRate,
-				total);
+				total, null);
+	}
+
+	public Reservation withCancellation(BigDecimal refund) {
+		return new Reservation(id, customerId, courtId, date, startsAt, durationHours, ReservationStatus.CANCELLED,
+				hourlyRate, discountRate, total, refund);
 	}
 
 	public Long id() {
@@ -56,6 +65,10 @@ public final class Reservation {
 		return startsAt;
 	}
 
+	public LocalTime endsAt() {
+		return startsAt.plusHours(durationHours);
+	}
+
 	public int durationHours() {
 		return durationHours;
 	}
@@ -72,8 +85,20 @@ public final class Reservation {
 		return discountRate;
 	}
 
+	public BigDecimal subtotal() {
+		return hourlyRate.multiply(BigDecimal.valueOf(durationHours)).setScale(2, RoundingMode.HALF_UP);
+	}
+
+	public BigDecimal discountAmount() {
+		return subtotal().subtract(total).setScale(2, RoundingMode.HALF_UP);
+	}
+
 	public BigDecimal total() {
 		return total;
+	}
+
+	public BigDecimal refundAmount() {
+		return refundAmount;
 	}
 
 }

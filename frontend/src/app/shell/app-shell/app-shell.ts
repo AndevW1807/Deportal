@@ -25,6 +25,7 @@ const MENU: readonly MenuItem[] = [
   { label: 'Usuarios', icon: 'group', link: '/admin/users', roles: ['ADMIN'] },
   { label: 'Reportes', icon: 'monitoring', link: '/admin/reports', roles: ['ADMIN'] },
   { label: 'Reservar cancha', icon: 'event_available', link: '/app/reserve', roles: ['CUSTOMER'] },
+  { label: 'Mis reservas', icon: 'event_note', link: '/app/reservations', roles: ['CUSTOMER'] },
 ];
 
 @Component({
@@ -44,11 +45,11 @@ const MENU: readonly MenuItem[] = [
     RouterLinkActive,
     RouterOutlet,
   ],
-  selector: 'app-admin-shell',
-  styleUrl: './admin-shell.css',
-  templateUrl: './admin-shell.html',
+  selector: 'app-shell',
+  styleUrl: './app-shell.css',
+  templateUrl: './app-shell.html',
 })
-export class AdminShell {
+export class AppShell {
   private readonly auth = inject(AuthService);
   private readonly session = inject(AuthSession);
   private readonly router = inject(Router);

@@ -22,12 +22,17 @@ export const routes: Routes = [
     path: 'app',
     canActivate: [signedInGuard],
     loadComponent: () =>
-      import('./admin/admin-shell/admin-shell').then((module) => module.AdminShell),
+      import('./shell/app-shell/app-shell').then((module) => module.AppShell),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'reserve' },
       {
         path: 'reserve',
         loadComponent: () => import('./customer/reserve/reserve').then((module) => module.Reserve),
+      },
+      {
+        path: 'reservations',
+        loadComponent: () =>
+          import('./customer/reservations/reservations').then((module) => module.MyReservations),
       },
     ],
   },
@@ -35,7 +40,7 @@ export const routes: Routes = [
     path: 'admin',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('./admin/admin-shell/admin-shell').then((module) => module.AdminShell),
+      import('./shell/app-shell/app-shell').then((module) => module.AppShell),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'courts' },
       {

@@ -14,7 +14,7 @@ JWT_SECRET=yia9IhGwWAILsBco6vrvFyb7Qk0KNVfg3RwNCBK//DE=
 
 Es un valor de prueba. Ese archivo no se sube a git.
 
-Con el `.env` listo, este comando crea la base, las tablas y las cuentas de prueba. La aplicación no crea ni modifica el esquema al arrancar.
+Con el `.env` listo, desde la raíz del repositorio, este comando crea la base, las tablas y las cuentas de prueba. MySQL tiene que estar ya en marcha. La aplicación no crea ni modifica el esquema al arrancar.
 
 ```bash
 ./database/create.sh

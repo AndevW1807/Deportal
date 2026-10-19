@@ -48,7 +48,7 @@ La contraseña de todas es `123456`.
 
 El dominio está en el centro, en Java puro y sin Spring. Ahí viven el horario, los solapes, la hora de limpieza, los descuentos, el reembolso y la lista de espera. Cada flujo es un caso de uso. El caso de uso no habla con MySQL ni con HTTP: habla con un puerto, una interfaz pequeña. JPA y los controladores son adaptadores: están afuera y solo traducen.
 
-Lo hicimos así para probar las reglas sin levantar el servidor. Si mañana hay otro descuento, se agrega otra estrategia y el caso de uso que crea la reserva no se toca. El JSON de la API tampoco es la entidad de dominio.
+Elegimos hexagonal porque en este proyecto se evalúan mucho más las reglas de cada requerimiento que las pantallas. El horario, el solape, la limpieza, el descuento, el reembolso y la lista de espera tienen que leerse y probarse solas, sin levantar el servidor. Si mañana hay otro descuento, se agrega otra estrategia y el caso de uso que crea la reserva no se toca. El JSON de la API tampoco es la entidad de dominio.
 
 ### Frontend: por funcionalidad
 

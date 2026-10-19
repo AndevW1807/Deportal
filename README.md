@@ -27,6 +27,8 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
+También se puede arrancar desde Cursor o VS Code. Hacen falta el Extension Pack for Java y el Spring Boot Extension Pack. Ese paquete trae Spring Boot Tools y Spring Boot Dashboard: abre la carpeta `backend` y ejecuta la aplicación desde el Dashboard.
+
 Frontend, en el puerto 4200. El proxy envía `/api` a `http://localhost:8080`, así que el backend tiene que estar corriendo antes.
 
 ```bash
@@ -77,29 +79,29 @@ El login devuelve un JWT. Las rutas de `/api/reservations` piden un cliente. Las
 
 Autenticación:
 
-- `POST /api/auth/login`
-- `POST /api/auth/register`
-- `GET /api/auth/session`
+- `POST /api/auth/login` — comprueba correo y contraseña y devuelve el JWT
+- `POST /api/auth/register` — crea la cuenta de un cliente
+- `GET /api/auth/session` — nombre, correo, rol y membresía de quien tiene el token
 
 Reservas:
 
-- `GET /api/reservations/courts`
-- `GET /api/reservations/availability`
-- `GET /api/reservations/quote`
-- `POST /api/reservations`
-- `GET /api/reservations`
-- `DELETE /api/reservations/{id}`
+- `GET /api/reservations/courts` — canchas que se pueden reservar
+- `GET /api/reservations/availability` — horas de inicio de una cancha: libre, ocupada o bloqueada por la limpieza
+- `GET /api/reservations/quote` — subtotal, descuentos de miembro y de hora valle, y total
+- `POST /api/reservations` — confirma la reserva; si ese día el horario está ocupado, queda en lista de espera
+- `GET /api/reservations` — reservas del cliente, si se pueden cancelar y el reembolso
+- `DELETE /api/reservations/{id}` — cancela la reserva y calcula el reembolso
 
 Admin:
 
-- `GET /api/admin/sport-types`
-- `GET /api/admin/courts`
-- `POST /api/admin/courts`
-- `PUT /api/admin/courts/{id}`
-- `DELETE /api/admin/courts/{id}`
-- `GET /api/admin/users`
-- `PUT /api/admin/users/{id}`
-- `GET /api/admin/reports/utilization`
+- `GET /api/admin/sport-types` — deportes con los que se puede registrar una cancha
+- `GET /api/admin/courts` — todas las canchas, con horario y tarifa
+- `POST /api/admin/courts` — registra una cancha
+- `PUT /api/admin/courts/{id}` — cambia nombre, deporte, cupo, horario o tarifa
+- `DELETE /api/admin/courts/{id}` — elimina una cancha
+- `GET /api/admin/users` — clientes y si son miembros
+- `PUT /api/admin/users/{id}` — activa o quita la membresía
+- `GET /api/admin/reports/utilization` — reservas, horas e ingresos entre dos fechas
 
 ## Pruebas
 

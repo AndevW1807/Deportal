@@ -95,6 +95,16 @@ describe('adminGuard', () => {
     expect(session.token()).toBe('customer-token');
   });
 
+  it('rejects a token whose expiry already passed', async () => {
+    session.save(tokenExpiringAt(Date.now() - 1000));
+
+    await router.navigateByUrl('/admin/courts');
+
+    expect(router.url).toBe('/login');
+    expect(session.token()).toBeNull();
+    http.expectNone('/api/auth/session');
+  });
+
   it('clears an expired session and returns to login', async () => {
     session.save('expired-token');
     const pending = router.navigateByUrl('/admin/courts');
@@ -107,3 +117,11 @@ describe('adminGuard', () => {
     expect(session.token()).toBeNull();
   });
 });
+
+function tokenExpiringAt(epochMs: number): string {
+  const payload = btoa(JSON.stringify({ exp: Math.floor(epochMs / 1000) }))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '');
+  return `eyJhbGciOiJub25lIn0.${payload}.sig`;
+}

@@ -4,12 +4,13 @@ import { CanActivateFn, Router } from '@angular/router';
 import { catchError, map, of } from 'rxjs';
 import { AuthService } from '../session/auth-service';
 import { AuthSession } from '../session/auth-session';
+import { accessTokenExpired } from '../session/token-expiry';
 
 export const signedInGuard: CanActivateFn = () => {
   const session = inject(AuthSession);
   const router = inject(Router);
 
-  if (!session.token()) {
+  if (dropExpired(session) || !session.token()) {
     return router.parseUrl('/login');
   }
 
@@ -30,7 +31,7 @@ export const adminGuard: CanActivateFn = () => {
   const session = inject(AuthSession);
   const router = inject(Router);
 
-  if (!session.token()) {
+  if (dropExpired(session) || !session.token()) {
     return router.parseUrl('/login');
   }
 
@@ -46,3 +47,12 @@ export const adminGuard: CanActivateFn = () => {
       }),
     );
 };
+
+function dropExpired(session: AuthSession): boolean {
+  const token = session.token();
+  if (token && accessTokenExpired(token)) {
+    session.clear();
+    return true;
+  }
+  return false;
+}

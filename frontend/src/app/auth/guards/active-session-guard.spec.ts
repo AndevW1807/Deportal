@@ -99,6 +99,16 @@ describe('activeSessionGuard', () => {
     expect(router.url).toBe('/app');
   });
 
+  it('drops a token whose expiry already passed and stays on login', async () => {
+    session.save(tokenExpiringAt(Date.now() - 1000));
+
+    await router.navigateByUrl('/login');
+
+    expect(router.url).toBe('/login');
+    expect(session.token()).toBeNull();
+    http.expectNone('/api/auth/session');
+  });
+
   it('drops an expired token and stays on login', async () => {
     session.save('expired-token');
     const pending = router.navigateByUrl('/login');
@@ -111,6 +121,14 @@ describe('activeSessionGuard', () => {
     expect(session.token()).toBeNull();
   });
 });
+
+function tokenExpiringAt(epochMs: number): string {
+  const payload = btoa(JSON.stringify({ exp: Math.floor(epochMs / 1000) }))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/g, '');
+  return `eyJhbGciOiJub25lIn0.${payload}.sig`;
+}
 
 function sessionUser(role: 'ADMIN' | 'CUSTOMER') {
   return {

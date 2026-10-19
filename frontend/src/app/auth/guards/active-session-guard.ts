@@ -5,6 +5,7 @@ import { catchError, map, of } from 'rxjs';
 import { AuthService } from '../session/auth-service';
 import { AuthSession } from '../session/auth-session';
 import { SessionUser } from '../session/session.model';
+import { accessTokenExpired } from '../session/token-expiry';
 
 export function viewForRole(role: SessionUser['role']): string {
   return role === 'ADMIN' ? '/admin/courts' : '/app';
@@ -13,6 +14,11 @@ export function viewForRole(role: SessionUser['role']): string {
 export const activeSessionGuard: CanActivateFn = (_route, state) => {
   const session = inject(AuthSession);
   const router = inject(Router);
+
+  const token = session.token();
+  if (token && accessTokenExpired(token)) {
+    session.clear();
+  }
 
   if (!session.token()) {
     return true;

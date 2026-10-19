@@ -6,13 +6,19 @@ Deportal reserva canchas deportivas. Un cliente elige cancha, fecha y hora, ve e
 
 Hace falta Java 17, MySQL 8 y Node.js 20.19 o superior. El backend y el frontend se levantan por separado.
 
-Primero crea la base con el script. Crea las tablas y deja cargadas las canchas y las cuentas de prueba. La aplicación no crea ni modifica el esquema al arrancar.
+Copia `backend/.env.example` a `backend/.env` y completa el usuario y la contraseña de MySQL. El secreto tiene que medir al menos 32 bytes. Para probar puedes usar este:
 
-```bash
-mysql -u USUARIO -p < database/deportal.sql
+```
+JWT_SECRET=yia9IhGwWAILsBco6vrvFyb7Qk0KNVfg3RwNCBK//DE=
 ```
 
-Con la base lista, copia `backend/.env.example` a `backend/.env` y completa el usuario, la contraseña de MySQL y `JWT_SECRET`. El secreto tiene que medir al menos 32 bytes. Ese archivo no se sube a git.
+Es un valor de prueba. Ese archivo no se sube a git.
+
+Con el `.env` listo, este comando crea la base, las tablas y las cuentas de prueba. La aplicación no crea ni modifica el esquema al arrancar.
+
+```bash
+./database/create.sh
+```
 
 Backend, en el puerto 8080:
 

@@ -1,6 +1,6 @@
 -- Crea la base deportal, las tablas y los datos de prueba.
--- Ejecutarlo una vez, antes de arrancar la aplicación:
---   mysql -u USUARIO -p < database/deportal.sql
+-- Desde la raíz del repositorio, con backend/.env ya lleno:
+--   ./database/create.sh
 
 CREATE DATABASE IF NOT EXISTS deportal
   CHARACTER SET utf8mb4

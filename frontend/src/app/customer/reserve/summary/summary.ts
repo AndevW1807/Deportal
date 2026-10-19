@@ -1,12 +1,12 @@
 import { Component, input, output } from '@angular/core';
-import { Court, formatRate } from '../../shared/court/court.model';
-import { formatCop } from '../../shared/format/money';
-import { Quote, formatDay } from '../shared/reservation.model';
+import { Court, formatRate } from '../../../shared/court/court.model';
+import { formatCop } from '../../../shared/format/money';
+import { Quote, formatDay } from '../../shared/reservation.model';
 
 @Component({
   selector: 'app-reserve-summary',
-  templateUrl: './reserve-summary.html',
-  styleUrl: './reserve.css',
+  templateUrl: './summary.html',
+  styleUrl: '../reserve.css',
   host: { style: 'display: contents' },
 })
 export class ReserveSummary {

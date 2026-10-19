@@ -1,12 +1,12 @@
 import { Component, input, output } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { Court, capacityLabel, formatRate, sportLook } from '../../shared/court/court.model';
+import { Court, capacityLabel, formatRate, sportLook } from '../../../shared/court/court.model';
 
 @Component({
   selector: 'app-reserve-court-step',
   imports: [MatIcon],
-  templateUrl: './reserve-court-step.html',
-  styleUrl: './reserve.css',
+  templateUrl: './court-step.html',
+  styleUrl: '../reserve.css',
   host: { style: 'display: contents' },
 })
 export class ReserveCourtStep {

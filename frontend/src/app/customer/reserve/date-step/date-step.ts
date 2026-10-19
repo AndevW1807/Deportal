@@ -1,12 +1,12 @@
 import { Component, input, output } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { formatDay } from '../shared/reservation.model';
+import { formatDay } from '../../shared/reservation.model';
 
 @Component({
   selector: 'app-reserve-date-step',
   imports: [MatIcon],
-  templateUrl: './reserve-date-step.html',
-  styleUrl: './reserve.css',
+  templateUrl: './date-step.html',
+  styleUrl: '../reserve.css',
   host: { style: 'display: contents' },
 })
 export class ReserveDateStep {

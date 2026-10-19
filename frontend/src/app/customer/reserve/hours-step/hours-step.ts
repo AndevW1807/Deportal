@@ -1,10 +1,10 @@
 import { Component, input, output } from '@angular/core';
-import { Slot } from '../shared/reservation.model';
+import { Slot } from '../../shared/reservation.model';
 
 @Component({
   selector: 'app-reserve-hours-step',
-  templateUrl: './reserve-hours-step.html',
-  styleUrl: './reserve.css',
+  templateUrl: './hours-step.html',
+  styleUrl: '../reserve.css',
   host: { style: 'display: contents' },
 })
 export class ReserveHoursStep {

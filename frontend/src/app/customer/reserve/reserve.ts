@@ -15,10 +15,10 @@ import {
   parseSlots,
   shiftMonth,
 } from '../shared/reservation.model';
-import { ReserveCourtStep } from './reserve-court-step';
-import { ReserveDateStep } from './reserve-date-step';
-import { ReserveHoursStep } from './reserve-hours-step';
-import { ReserveSummary } from './reserve-summary';
+import { ReserveCourtStep } from './court-step/court-step';
+import { ReserveDateStep } from './date-step/date-step';
+import { ReserveHoursStep } from './hours-step/hours-step';
+import { ReserveSummary } from './summary/summary';
 
 @Component({
   selector: 'app-reserve',
